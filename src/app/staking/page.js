@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   atom,
@@ -15,9 +16,14 @@ import {
 } from "@image/index";
 import Validator from "@/components/staking/validator";
 function Staking() {
+  const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
   return (
     <>
-      {true ? (
+      {step == 1 ? (
         <>
           {/* Site Header Start here  */}
           <div
@@ -301,6 +307,9 @@ function Staking() {
                         data-bs-toggle="modal"
                         data-bs-target="#modal_connect-wallet"
                         role="button"
+                        onClick={() => {
+                          setStep(2);
+                        }}
                       >
                         Connect Wallet
                       </button>
@@ -461,7 +470,8 @@ function Staking() {
                   </div>
                   <div class="modal-addition-info">
                     <p class="copy-v-sm font-demi">
-                      Don't have a wallet? <a href="#">See supported wallets</a>
+                      Don{"'"}t have a wallet?{" "}
+                      <a href="#">See supported wallets</a>
                     </p>
                   </div>
                   <button
@@ -984,8 +994,10 @@ function Staking() {
           </div>
           {/* Switch Network Modal Start Here  */}
         </>
+      ) : step == 2 ? (
+        <Validator setStep={setStep} />
       ) : (
-        <Validator />
+        <div>Hiii</div>
       )}
     </>
   );

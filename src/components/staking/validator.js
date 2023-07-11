@@ -1,52 +1,143 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   atom,
   aurastake,
   cosmos,
-  evmosPng,
   evmosSvg,
   fishking,
-  inj,
-  junoPng,
   junoSvg,
-  k,
   kaplrCircle,
-  keplr,
   kraken,
   lavender2,
   lavender,
   leap,
   osmosis,
-  qAtom,
-  qInj,
-  qRegen,
-  qinj,
-  qosmo,
-  quicksilverPng,
-  quicksilverSvg,
-  raydium,
   regen,
   sanka,
   smartnodes,
-  stargaze2,
-  stargaze,
   stargaze1,
   stir,
   terravegas,
-  logo,
   favicon,
 } from "@image/index";
 
-function Validator() {
+function Validator({ setStep }) {
+  const [validators, setValidators] = useState([
+    {
+      img: lavender,
+      name: "Lavender.Five Nodes",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: kraken,
+      name: "Kraten",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: stir,
+      name: "Stir",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: terravegas,
+      name: "TerraVegas",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: sanka,
+      name: "Sanka Networks",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: smartnodes,
+      name: "SmartNodes",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: fishking,
+      name: "FishKing",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: aurastake,
+      name: "AuraStake",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+  ]);
+
+  const [selectedValidator, setSelectedValidors] = useState([]);
+  const [activeSection, setActiveSection] = useState("validators");
+  const [searchData, setSearchData] = useState("");
+
+  function handleValidatorChange(item, index) {
+    const tempValidator = validators;
+    tempValidator[index].isSelected = !tempValidator[index].isSelected;
+    setValidators(tempValidator);
+    const validator = selectedValidator.find(
+      (element) => element.name == item.name
+    );
+    if (validator) {
+      setSelectedValidors((current) =>
+        current.filter((element) => element.name != item.name)
+      );
+    } else {
+      setSelectedValidors([...selectedValidator, item]);
+    }
+  }
   return (
-    <div>
+    <>
       {/* Staking Start here */}
       <div class="staking-flow">
         <div class="container">
           <div class="staking-flow__header">
-            <div class="go-back">
-              <a href="#">Back</a>
+            <div
+              class="go-back"
+              onClick={() => {
+                setStep(1);
+              }}
+            >
+              Back
             </div>
             <div class="staking-flow__header--title text-lightgray">
               <h5
@@ -68,7 +159,9 @@ function Validator() {
                     <ul class="nav nav-tabs">
                       <li class="nav-item">
                         <button
-                          class="nav-link active"
+                          class={`nav-link ${
+                            activeSection == "validators" && "active"
+                          }`}
                           id="staking-flow_1-tab"
                           data-bs-toggle="pill"
                           data-bs-target="#staking-flow_1"
@@ -76,13 +169,18 @@ function Validator() {
                           role="tab"
                           aria-controls="staking-flow_1"
                           aria-selected="true"
+                          onClick={() => {
+                            setActiveSection("validators");
+                          }}
                         >
                           All Validators
                         </button>
                       </li>
                       <li class="nav-item">
                         <button
-                          class="nav-link"
+                          class={`nav-link ${
+                            activeSection == "favorites" && "active"
+                          }`}
                           id="staking-flow_2-tab"
                           data-bs-toggle="pill"
                           data-bs-target="#staking-flow_2"
@@ -90,6 +188,9 @@ function Validator() {
                           role="tab"
                           aria-controls="staking-flow_2"
                           aria-selected="false"
+                          onClick={() => {
+                            setActiveSection("favorites");
+                          }}
                         >
                           Favourites
                         </button>
@@ -143,925 +244,438 @@ function Validator() {
             </div>
             {/* Tabs Content [ Show Validators / Favourites ] [ If you are using Loop, replace (_1) (_2) with index respectively ] */}
             <div class="tab-content__staking-flow tab-content">
-              <div
-                class="staking_tab tab-pane fade show active"
-                id="staking-flow_1"
-                role="tabpanel"
-                aria-labelledby="staking-flow_1-tab"
-              >
-                <div class="staking-flow__body--all">
-                  <div class="staking-flow__body--all__search-and-stats">
-                    <div class="row gx-0 align-items-center">
-                      <div class="col-lg-6">
-                        {/* Search Input */}
-                        <div class="search-wrapper">
-                          <input
-                            type="text"
-                            class="form-input-search"
-                            placeholder="Search Validator"
-                          />
-                          <div class="search-icon">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+              {activeSection == "validators" ? (
+                <div
+                  class="staking_tab tab-pane fade show active"
+                  id="staking-flow_1"
+                  role="tabpanel"
+                  aria-labelledby="staking-flow_1-tab"
+                >
+                  <div class="staking-flow__body--all">
+                    <div class="staking-flow__body--all__search-and-stats">
+                      <div class="row gx-0 align-items-center">
+                        <div class="col-lg-6">
+                          {/* Search Input */}
+                          <div class="search-wrapper">
+                            <input
+                              type="text"
+                              class="form-input-search"
+                              placeholder="Search Validator"
+                              value={searchData}
+                              onChange={(e) => {
+                                setSearchData(e.target.value);
+                              }}
+                            />
+                            <div class="search-icon">
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 18 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
+                                  stroke="#FBFBFB"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                                <path
+                                  d="M15.7508 15.7508L12.4883 12.4883"
+                                  stroke="#FBFBFB"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div
+                              class={`reset-icon ${searchData && "show"}`}
+                              onClick={() => {
+                                setSearchData("");
+                              }}
                             >
-                              <path
-                                d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
-                                stroke="#FBFBFB"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M15.7508 15.7508L12.4883 12.4883"
-                                stroke="#FBFBFB"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div class="reset-icon">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M13.5 4.5L4.5 13.5"
-                                stroke="#FF8500"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M4.5 4.5L13.5 13.5"
-                                stroke="#FF8500"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 18 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M13.5 4.5L4.5 13.5"
+                                  stroke="#FF8500"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                                <path
+                                  d="M4.5 4.5L13.5 13.5"
+                                  stroke="#FF8500"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col-lg-6">
-                        {/* Number of Validators */}
-                        <div class="stats text-end">
-                          <p>
-                            Showing: <span>23,453</span> validators
-                          </p>
+                        <div class="col-lg-6">
+                          {/* Number of Validators */}
+                          <div class="stats text-end">
+                            <p>
+                              Showing: <span>23,453</span> validators
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="staking-flow__body--all__validators">
-                    <div class="table text-lightgray">
-                      <div class="table__head">
-                        {/* Row # 1 */}
-                        <div class="table__head--row">
-                          <div class="table__head--col">
-                            <p>Validator</p>
-                          </div>
-                          {/* Add class [ sort-it ] sort it on the first click and */}
-                          {/* Add class [ sort-it--down ] or [ sort-it--up ] along with it  */}
-                          <div class="table__head--col table__head--col-has-tooltip sort-it sort-it--up">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="TVL is equal to the USD value of <br> all assets held by the protocol."
-                            >
-                              Voting Power
-                            </p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip sort-it sort-it--down">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="Bonus QCK rewards boost for your <br> validator choice, based on decentralisation, <br> performance and governance participation."
-                            >
-                              Commission
-                            </p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="Number of proposals where <br> the validator has voted."
-                            >
-                              VOTING RECORD
-                            </p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="Sum of self-bonded and <br> delegated tokens."
-                            >
-                              PR SCORE
-                            </p>
+                    <div class="staking-flow__body--all__validators">
+                      <div class="table text-lightgray">
+                        <div class="table__head">
+                          {/* Row # 1 */}
+                          <div class="table__head--row">
+                            <div class="table__head--col">
+                              <p>Validator</p>
+                            </div>
+                            {/* Add class [ sort-it ] sort it on the first click and */}
+                            {/* Add class [ sort-it--down ] or [ sort-it--up ] along with it  */}
+                            <div class="table__head--col table__head--col-has-tooltip sort-it sort-it--up">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="TVL is equal to the USD value of <br> all assets held by the protocol."
+                              >
+                                Voting Power
+                              </p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip sort-it sort-it--down">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="Bonus QCK rewards boost for your <br> validator choice, based on decentralisation, <br> performance and governance participation."
+                              >
+                                Commission
+                              </p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="Number of proposals where <br> the validator has voted."
+                              >
+                                VOTING RECORD
+                              </p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="Sum of self-bonded and <br> delegated tokens."
+                              >
+                                PR SCORE
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="table__body">
-                        {/* Row # 1 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-1" type="checkbox" />
-                                <label for="favourite-1">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">1</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={lavender} alt="lavender" />
+                        {validators && validators.length ? (
+                          <div class="table__body">
+                            {validators.map((item, index) => {
+                              return (
+                                <div
+                                  class="table__body--row"
+                                  key={item.name + index}
+                                >
+                                  {/* Validator */}
+                                  <div class="table__body--col">
+                                    <div class="validators__intro">
+                                      {/* Check this Validator */}
+                                      <div class="validator-check">
+                                        <input
+                                          type="checkbox"
+                                          class="form-check-input outline-orange"
+                                          checked={item.isSelected}
+                                          onClick={() => {
+                                            handleValidatorChange(item, index);
+                                          }}
+                                          //   checked
+                                        />
+                                      </div>
+                                      {/* Make this Validator Favourite */}
+                                      <div class="make-it-favourite">
+                                        <input
+                                          id="favourite-1"
+                                          type="checkbox"
+                                        />
+                                        <label for="favourite-1">
+                                          <svg
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 20 20"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
+                                              fill="currentColor"
+                                              stroke="#FFCE31"
+                                            />
+                                          </svg>
+                                        </label>
+                                      </div>
+                                      {/* Validator count number */}
+                                      <div class="count px-2">
+                                        <p class="copy-sm">{index + 1}</p>
+                                      </div>
+                                      {/* Validator Image */}
+                                      <div class="image-wrapper">
+                                        <div class="image-ratio image-ratio--square">
+                                          <Image
+                                            src={item.img}
+                                            alt="lavender"
+                                          />
+                                        </div>
+                                      </div>
+                                      {/* Validator Name */}
+                                      <div class="text-wrapper">
+                                        <p class="copy-normal">{item.name}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* Voting Power */}
+                                  <div class="table__body--col">
+                                    <div class="voting-power">
+                                      <p class="copy-normal">
+                                        {item.votingPower}
+                                      </p>
+                                      <span>{item.votingPowerDiff}</span>
+                                    </div>
+                                  </div>
+                                  {/* Commisstion */}
+                                  <div class="table__body--col">
+                                    <p class="copy-sm">{item.commission}</p>
+                                  </div>
+                                  {/* Voting Record */}
+                                  <div class="table__body--col">
+                                    <div class="tag tag-gray">
+                                      {item.votingRecord}
+                                    </div>
+                                  </div>
+                                  {/* PR Score */}
+                                  <div class="table__body--col">
+                                    <div
+                                      class="badge badge-level-1"
+                                      data-bs-toggle="tooltip"
+                                      data-bs-placement="bottom"
+                                      data-bs-html="true"
+                                      title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
+                                    >
+                                      {item.PRScore}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">Lavender.Five Nodes</p>
-                              </div>
-                            </div>
+                              );
+                            })}
                           </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-1"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 01
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 2 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-2" type="checkbox" />
-                                <label for="favourite-2">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">2</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={kraken} alt="kraken" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">Kraken</p>
+                        ) : (
+                          <div class="table__body">
+                            <div class="no-result-found show">
+                              <div class="no-result-found__text-wrapper">
+                                <h6 class="font-demi text-lightgray">
+                                  No Results Found
+                                </h6>
+                                <p class="copy-sm">
+                                  Try changing your search term.
+                                </p>
                               </div>
                             </div>
                           </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-1"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 01
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 3 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-3" type="checkbox" />
-                                <label for="favourite-3">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">3</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={stir} alt="stir" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">Stir</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-1"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 01
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 4 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-4" type="checkbox" />
-                                <label for="favourite-4">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">4</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={terravegas} alt="terravegas" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">TerraVegas</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-1"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 01
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 5 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-5" type="checkbox" />
-                                <label for="favourite-5">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">5</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={sanka} alt="sanka" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">Sanka Networks</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-2"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 02
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 6 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-6" type="checkbox" />
-                                <label for="favourite-6">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">6</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={smartnodes} alt="smartnodes" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">SmartNodes</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-5"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 05
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 7 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-7" type="checkbox" />
-                                <label for="favourite-7">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">7</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={fishking} alt="fishking" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">FishKing</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-3"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 03
-                            </div>
-                          </div>
-                        </div>
-                        {/* Row # 8 */}
-                        <div class="table__body--row">
-                          {/* Validator */}
-                          <div class="table__body--col">
-                            <div class="validators__intro">
-                              {/* Check this Validator */}
-                              <div class="validator-check">
-                                <input
-                                  type="checkbox"
-                                  class="form-check-input outline-orange"
-                                  //   checked
-                                />
-                              </div>
-                              {/* Make this Validator Favourite */}
-                              <div class="make-it-favourite">
-                                <input id="favourite-8" type="checkbox" />
-                                <label for="favourite-8">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M11.889 7.80286L11.9979 8.15517H12.3667H18.5101L13.4984 11.9461L13.2188 12.1576L13.3223 12.4925L15.2257 18.6493L10.3041 14.8789L10 14.646L9.69593 14.8789L4.76844 18.6538L6.64476 12.5257L6.74644 12.1936L6.47074 11.9824L1.47486 8.15517H7.63333H8.0021L8.11103 7.80286L10 1.69282L11.889 7.80286Z"
-                                      fill="currentColor"
-                                      stroke="#FFCE31"
-                                    />
-                                  </svg>
-                                </label>
-                              </div>
-                              {/* Validator count number */}
-                              <div class="count px-2">
-                                <p class="copy-sm">8</p>
-                              </div>
-                              {/* Validator Image */}
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={aurastake} alt="aurastake" />
-                                </div>
-                              </div>
-                              {/* Validator Name */}
-                              <div class="text-wrapper">
-                                <p class="copy-normal">AuraStake</p>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Voting Power */}
-                          <div class="table__body--col">
-                            <div class="voting-power">
-                              <p class="copy-normal">12,793,452</p>
-                              <span>6.18%</span>
-                            </div>
-                          </div>
-                          {/* Commisstion */}
-                          <div class="table__body--col">
-                            <p class="copy-sm">22.35%</p>
-                          </div>
-                          {/* Voting Record */}
-                          <div class="table__body--col">
-                            <div class="tag tag-gray">12/65</div>
-                          </div>
-                          {/* PR Score */}
-                          <div class="table__body--col">
-                            <div
-                              class="badge badge-level-4"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title='<p class="text-uppercase mb-1">PR SCORE: <span>0</span> – <span>10</span></p><p><i>Stake with validator with higher PR <br> Score to earn more rewards.</i></p>'
-                            >
-                              LEVEL 04
-                            </div>
-                          </div>
-                        </div>
-                        {/* if No Result Found, add class [ show ] to this */}
-                        <div class="no-result-found">
-                          <div class="no-result-found__text-wrapper">
-                            <h6 class="font-demi text-lightgray">
-                              No Results Found
-                            </h6>
-                            <p class="copy-sm">
-                              Try changing your search term.
-                            </p>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="staking_tab tab-pane fade"
-                id="staking-flow_2"
-                role="tabpanel"
-                aria-labelledby="staking-flow_2-tab"
-              >
-                <div class="staking-flow__body--all">
-                  <div class="staking-flow__body--all__search-and-stats">
-                    <div class="row gx-0 align-items-center">
-                      <div class="col-lg-6">
-                        {/* Search Input */}
-                        <div class="search-wrapper">
-                          <input
-                            type="text"
-                            class="form-input-search"
-                            placeholder="Search Validator"
-                          />
-                          <div class="search-icon">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+              ) : (
+                <div
+                  class="staking_tab tab-pane fade show active"
+                  id="staking-flow_2"
+                  role="tabpanel"
+                  aria-labelledby="staking-flow_2-tab"
+                >
+                  <div class="staking-flow__body--all">
+                    <div class="staking-flow__body--all__search-and-stats">
+                      <div class="row gx-0 align-items-center">
+                        <div class="col-lg-6">
+                          {/* Search Input */}
+                          <div class="search-wrapper">
+                            <input
+                              type="text"
+                              class="form-input-search"
+                              placeholder="Search Validator"
+                              value={searchData}
+                              onChange={(e) => {
+                                setSearchData(e.target.value);
+                              }}
+                            />
+                            <div class="search-icon">
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 18 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
+                                  stroke="#FBFBFB"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                                <path
+                                  d="M15.7508 15.7508L12.4883 12.4883"
+                                  stroke="#FBFBFB"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div
+                              class={`reset-icon ${searchData && "show"}`}
+                              onClick={() => {
+                                setSearchData("");
+                              }}
                             >
-                              <path
-                                d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
-                                stroke="#FBFBFB"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M15.7508 15.7508L12.4883 12.4883"
-                                stroke="#FBFBFB"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div class="reset-icon">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M13.5 4.5L4.5 13.5"
-                                stroke="#FF8500"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M4.5 4.5L13.5 13.5"
-                                stroke="#FF8500"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 18 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M13.5 4.5L4.5 13.5"
+                                  stroke="#FF8500"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                                <path
+                                  d="M4.5 4.5L13.5 13.5"
+                                  stroke="#FF8500"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col-lg-6">
-                        {/* Number of Validators */}
-                        <div class="stats text-end">
-                          <p>
-                            Showing: <span>23,453</span> validators
-                          </p>
+                        <div class="col-lg-6">
+                          {/* Number of Validators */}
+                          <div class="stats text-end">
+                            <p>
+                              Showing: <span>23,453</span> validators
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="staking-flow__body--all__validators">
-                    <div class="table text-lightgray">
-                      <div class="table__head">
-                        {/* Row # 1 */}
-                        <div class="table__head--row">
-                          <div class="table__head--col">
-                            <p>Validator</p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="TVL is equal to the USD value of <br> all assets held by the protocol."
-                            >
-                              Voting Power
-                            </p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="Bonus QCK rewards boost for your <br> validator choice, based on decentralisation, <br> performance and governance participation."
-                            >
-                              Commission
-                            </p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="Number of proposals where <br> the validator has voted."
-                            >
-                              VOTING RECORD
-                            </p>
-                          </div>
-                          <div class="table__head--col table__head--col-has-tooltip">
-                            <p
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="bottom"
-                              data-bs-html="true"
-                              title="Sum of self-bonded and <br> delegated tokens."
-                            >
-                              PR SCORE
-                            </p>
+                    <div class="staking-flow__body--all__validators">
+                      <div class="table text-lightgray">
+                        <div class="table__head">
+                          {/* Row # 1 */}
+                          <div class="table__head--row">
+                            <div class="table__head--col">
+                              <p>Validator</p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="TVL is equal to the USD value of <br> all assets held by the protocol."
+                              >
+                                Voting Power
+                              </p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="Bonus QCK rewards boost for your <br> validator choice, based on decentralisation, <br> performance and governance participation."
+                              >
+                                Commission
+                              </p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="Number of proposals where <br> the validator has voted."
+                              >
+                                VOTING RECORD
+                              </p>
+                            </div>
+                            <div class="table__head--col table__head--col-has-tooltip">
+                              <p
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-html="true"
+                                title="Sum of self-bonded and <br> delegated tokens."
+                              >
+                                PR SCORE
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="table__body">
-                        {/* Favourite Validators */}
-                        {/*----------------------*/}
-                        {/*- Will have same structure as usual, but the
-                         **star** [ Favourite ] is a checkbox that will be checked */}
+                        <div class="table__body">
+                          {/* Favourite Validators */}
+                          {/*----------------------*/}
+                          {/*- Will have same structure as usual, but the
+                           **star** [ Favourite ] is a checkbox that will be checked */}
 
-                        {/* No Favourite Validators Found */}
-                        {/* Add [ show ] class to show the this */}
-                        <div class="no-favourites no-favourites__validators show text-center">
-                          <div class="no-favourites__icon-wrapper p-2">
-                            <svg
-                              width="44"
-                              height="37"
-                              viewBox="0 0 44 37"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M22 7.37157L18.2137 3.71532C16.3088 1.81041 13.7252 0.740234 11.0312 0.740234C8.33729 0.740234 5.75366 1.81041 3.84875 3.71532C1.94383 5.62024 0.873657 8.20386 0.873657 10.8978C0.873657 13.5918 1.94383 16.1754 3.84875 18.0803L22 36.4997L40.1512 18.0884C42.0562 16.1835 43.1263 13.5999 43.1263 10.9059C43.1263 8.21199 42.0562 5.62837 40.1512 3.72345C38.2463 1.81853 35.6627 0.74836 32.9687 0.74836C30.2748 0.74836 27.6912 1.81853 25.7862 3.72345L18.75 10.4997L25.25 16.9997L22 20.2497"
-                                fill="#EE1313"
-                                fill-opacity="0.2"
-                              />
-                              <path
-                                d="M22 7.37157L18.2137 3.71532C16.3088 1.81041 13.7252 0.740234 11.0312 0.740234C8.33729 0.740234 5.75366 1.81041 3.84875 3.71532C1.94383 5.62024 0.873657 8.20386 0.873657 10.8978C0.873657 13.5918 1.94383 16.1754 3.84875 18.0803L22 36.4997L40.1512 18.0884C42.0562 16.1835 43.1263 13.5999 43.1263 10.9059C43.1263 8.21199 42.0562 5.62837 40.1512 3.72345C38.2463 1.81853 35.6627 0.74836 32.9687 0.74836C30.2748 0.74836 27.6912 1.81853 25.7862 3.72345L18.75 10.4997L25.25 16.9997L22 20.2497"
-                                stroke="#EE1313"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div class="no-favourites__text-wrapper">
-                            <h4 class="h4-sm text-lightgray font-bold">
-                              No Favourites Yet
-                            </h4>
-                            <p class="copy-lg">
-                              Add validators to your favourites to easily set
-                              your stake allocation intent.
-                            </p>
-                            <div class="btn-wrapper">
-                              <a href="#" class="btn btn-primary">
-                                Add to Favourites
-                              </a>
+                          {/* No Favourite Validators Found */}
+                          {/* Add [ show ] class to show the this */}
+                          <div class="no-favourites no-favourites__validators show text-center">
+                            <div class="no-favourites__icon-wrapper p-2">
+                              <svg
+                                width="44"
+                                height="37"
+                                viewBox="0 0 44 37"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M22 7.37157L18.2137 3.71532C16.3088 1.81041 13.7252 0.740234 11.0312 0.740234C8.33729 0.740234 5.75366 1.81041 3.84875 3.71532C1.94383 5.62024 0.873657 8.20386 0.873657 10.8978C0.873657 13.5918 1.94383 16.1754 3.84875 18.0803L22 36.4997L40.1512 18.0884C42.0562 16.1835 43.1263 13.5999 43.1263 10.9059C43.1263 8.21199 42.0562 5.62837 40.1512 3.72345C38.2463 1.81853 35.6627 0.74836 32.9687 0.74836C30.2748 0.74836 27.6912 1.81853 25.7862 3.72345L18.75 10.4997L25.25 16.9997L22 20.2497"
+                                  fill="#EE1313"
+                                  fill-opacity="0.2"
+                                />
+                                <path
+                                  d="M22 7.37157L18.2137 3.71532C16.3088 1.81041 13.7252 0.740234 11.0312 0.740234C8.33729 0.740234 5.75366 1.81041 3.84875 3.71532C1.94383 5.62024 0.873657 8.20386 0.873657 10.8978C0.873657 13.5918 1.94383 16.1754 3.84875 18.0803L22 36.4997L40.1512 18.0884C42.0562 16.1835 43.1263 13.5999 43.1263 10.9059C43.1263 8.21199 42.0562 5.62837 40.1512 3.72345C38.2463 1.81853 35.6627 0.74836 32.9687 0.74836C30.2748 0.74836 27.6912 1.81853 25.7862 3.72345L18.75 10.4997L25.25 16.9997L22 20.2497"
+                                  stroke="#EE1313"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div class="no-favourites__text-wrapper">
+                              <h4 class="h4-sm text-lightgray font-bold">
+                                No Favourites Yet
+                              </h4>
+                              <p class="copy-lg">
+                                Add validators to your favourites to easily set
+                                your stake allocation intent.
+                              </p>
+                              <div class="btn-wrapper">
+                                <a href="#" class="btn btn-primary">
+                                  Add to Favourites
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1069,7 +683,7 @@ function Validator() {
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -1112,8 +726,10 @@ function Validator() {
                     <div class="network__validators text-almostwhite">
                       {/* Selected Validator Count */}
                       <h6 class="font-demi text-lightgray">
-                        <span class="selected-validators__count">8</span>/8
-                        Validators Selected
+                        <span class="selected-validators__count">
+                          {selectedValidator.length}
+                        </span>
+                        /8 Validators Selected
                       </h6>
                       {/* Selected Validator Instrunction */}
                       <span class="selected-validators__instructions copy-v-sm">
@@ -1121,7 +737,12 @@ function Validator() {
                         validators.
                       </span>
                       {/* [ Error ] [ Exceeds 8 ] */}
-                      <span class="error-message error-message__exceeds-no-of-validators">
+                      {/* Done */}
+                      <span
+                        class={`error-message error-message__exceeds-no-of-validators ${
+                          selectedValidator.length > 8 && "show"
+                        }`}
+                      >
                         <svg
                           width="12"
                           height="13"
@@ -1185,354 +806,57 @@ function Validator() {
                   <div class="stake-allocation__images-validators">
                     {/* Selected Validators Images and Tooltip on Hovers */}
                     <div class="selected-validators__info">
-                      {/* Selected Validator # 1 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-1">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={lavender2} alt="lavender2" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={lavender2} alt="lavender2" />
+                      {selectedValidator.map((item, index) => {
+                        return (
+                          <div
+                            class="selected-validators__info--each selected-validators__info--each-1"
+                            key={item.name + index}
+                          >
+                            {/* Image for each Validator */}
+                            <div class="image-ratio image-ratio--square">
+                              <Image src={item.img} alt="lavender2" />
+                            </div>
+                            {/* Tooltip for each Validator */}
+                            <div class="selected-validators__info--each__tooltip">
+                              <div class="selected-validators__info--each__tooltip-head">
+                                <div class="network">
+                                  <div class="image-wrapper">
+                                    <div class="image-ratio image-ratio--square">
+                                      <Image src={item.img} alt="lavender2" />
+                                    </div>
+                                  </div>
+                                  <div class="text-wrapper text-lightgray">
+                                    <p class="copy-normal font-demi">
+                                      {item.name}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div class="network-badge">
+                                  <div class="badge badge-sm badge-level-1">
+                                    {item.PRScore}
+                                  </div>
                                 </div>
                               </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">
-                                  Lavender.Five Nodes
-                                </p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-1">
-                                Level 01
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 2 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-2">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={sanka} alt="sanka" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={sanka} alt="sanka" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">Sanka</p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-2">
-                                Level 02
+                              <div class="selected-validators__info--each__tooltip-body">
+                                <ul class="list-reset">
+                                  <li>
+                                    <p class="th">Commission</p>
+                                    <p class="td">{item.commission}</p>
+                                  </li>
+                                  <li>
+                                    <p class="th">Voting Power</p>
+                                    <p class="td">{item.votingPower}</p>
+                                  </li>
+                                  <li>
+                                    <p class="th">Voting Record</p>
+                                    <p class="td">{item.votingRecord}</p>
+                                  </li>
+                                </ul>
                               </div>
                             </div>
                           </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 3 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-3">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={terravegas} alt="terravegas" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={terravegas} alt="terravegas" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">TerraVegas</p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-1">
-                                Level 01
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 4 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-4">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={stir} alt="stir" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={stir} alt="stir" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">Stir</p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-1">
-                                Level 01
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 5 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-5">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={lavender} alt="lavender" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={lavender} alt="lavender" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">
-                                  Lavender.Five Nodes
-                                </p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-1">
-                                Level 01
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 6 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-6">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={smartnodes} alt="smartnodes" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={smartnodes} alt="smartnodes" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">SmartNodes</p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-5">
-                                Level 05
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 7 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-7">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={fishking} alt="fishking" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={fishking} alt="fishking" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">FishKing</p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-3">
-                                Level 03
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Selected Validator # 8 */}
-                      <div class="selected-validators__info--each selected-validators__info--each-8">
-                        {/* Image for each Validator */}
-                        <div class="image-ratio image-ratio--square">
-                          <Image src={aurastake} alt="aurastake" />
-                        </div>
-                        {/* Tooltip for each Validator */}
-                        <div class="selected-validators__info--each__tooltip">
-                          <div class="selected-validators__info--each__tooltip-head">
-                            <div class="network">
-                              <div class="image-wrapper">
-                                <div class="image-ratio image-ratio--square">
-                                  <Image src={aurastake} alt="aurastake" />
-                                </div>
-                              </div>
-                              <div class="text-wrapper text-lightgray">
-                                <p class="copy-normal font-demi">AuraStake</p>
-                              </div>
-                            </div>
-                            <div class="network-badge">
-                              <div class="badge badge-sm badge-level-4">
-                                Level 04
-                              </div>
-                            </div>
-                          </div>
-                          <div class="selected-validators__info--each__tooltip-body">
-                            <ul class="list-reset">
-                              <li>
-                                <p class="th">Commission</p>
-                                <p class="td">12.5%</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Power</p>
-                                <p class="td">12,793,452</p>
-                              </li>
-                              <li>
-                                <p class="th">Voting Record</p>
-                                <p class="td">12/65</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -1541,7 +865,15 @@ function Validator() {
                 {/* Btn to go next */}
                 <div class="btn-wrapper text-end">
                   {/* <a href="#" class="btn btn-primary disabled">Next</a> */}
-                  <button type="submit" class="btn btn-primary">
+                  <button
+                    type="submit"
+                    class={`btn btn-primary ${
+                      !selectedValidator.length && "disabled"
+                    }`}
+                    onClick={() => {
+                      setStep(3);
+                    }}
+                  >
                     Next
                   </button>
                 </div>
@@ -1591,7 +923,7 @@ function Validator() {
               </div>
               <div class="modal-addition-info">
                 <p class="copy-v-sm font-demi">
-                  Don't have a wallet? <a href="#">See supported wallets</a>
+                  Don{"'"}t have a wallet? <a href="#">See supported wallets</a>
                 </p>
               </div>
               <button
@@ -2045,7 +1377,7 @@ function Validator() {
         </div>
       </div>
       {/* Switch Network Modal Start Here */}
-    </div>
+    </>
   );
 }
 
