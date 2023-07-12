@@ -13,11 +13,104 @@ import {
   stargaze1,
   evmosSvg,
   junoSvg,
+  aurastake,
+  fishking,
+  kraken,
+  lavender,
+  sanka,
+  smartnodes,
+  stir,
+  terravegas,
 } from "@image/index";
 import Validator from "@/components/staking/validator";
+import Allocate from "@/components/staking/allocate";
+
 function Staking() {
   const [step, setStep] = useState(1);
 
+  const [validators, setValidators] = useState([
+    {
+      img: lavender,
+      name: "Lavender.Five Nodes",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: kraken,
+      name: "Kraten",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: stir,
+      name: "Stir",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: terravegas,
+      name: "TerraVegas",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: sanka,
+      name: "Sanka Networks",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: smartnodes,
+      name: "SmartNodes",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: fishking,
+      name: "FishKing",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+    {
+      img: aurastake,
+      name: "AuraStake",
+      votingPower: "12,793,452",
+      votingPowerDiff: "6.18%",
+      commission: "22.35%",
+      votingRecord: "12/65",
+      PRScore: "LEVEL 01",
+      isSelected: false,
+    },
+  ]);
+  const [selectedValidator, setSelectedValidors] = useState([]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [step]);
@@ -995,9 +1088,21 @@ function Staking() {
           {/* Switch Network Modal Start Here  */}
         </>
       ) : step == 2 ? (
-        <Validator setStep={setStep} />
+        <Validator
+          setStep={setStep}
+          validators={validators}
+          setValidators={setValidators}
+          setSelectedValidors={setSelectedValidors}
+          selectedValidator={selectedValidator}
+        />
       ) : (
-        <div>Hiii</div>
+        <Allocate
+          setStep={setStep}
+          validators={validators}
+          setValidators={setValidators}
+          setSelectedValidors={setSelectedValidors}
+          selectedValidator={selectedValidator}
+        />
       )}
     </>
   );

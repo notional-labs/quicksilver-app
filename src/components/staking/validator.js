@@ -2,111 +2,24 @@ import React, { useState } from "react";
 import Image from "next/image";
 import {
   atom,
-  aurastake,
   cosmos,
   evmosSvg,
-  fishking,
   junoSvg,
   kaplrCircle,
-  kraken,
-  lavender2,
-  lavender,
   leap,
   osmosis,
   regen,
-  sanka,
-  smartnodes,
   stargaze1,
-  stir,
-  terravegas,
   favicon,
 } from "@image/index";
 
-function Validator({ setStep }) {
-  const [validators, setValidators] = useState([
-    {
-      img: lavender,
-      name: "Lavender.Five Nodes",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: kraken,
-      name: "Kraten",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: stir,
-      name: "Stir",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: terravegas,
-      name: "TerraVegas",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: sanka,
-      name: "Sanka Networks",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: smartnodes,
-      name: "SmartNodes",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: fishking,
-      name: "FishKing",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-    {
-      img: aurastake,
-      name: "AuraStake",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-    },
-  ]);
-
-  const [selectedValidator, setSelectedValidors] = useState([]);
+function Validator({
+  setStep,
+  validators,
+  setValidators,
+  selectedValidator,
+  setSelectedValidors,
+}) {
   const [activeSection, setActiveSection] = useState("validators");
   const [searchData, setSearchData] = useState("");
 
@@ -435,7 +348,7 @@ function Validator({ setStep }) {
                                         <div class="image-ratio image-ratio--square">
                                           <Image
                                             src={item.img}
-                                            alt="lavender"
+                                            alt={item.name}
                                           />
                                         </div>
                                       </div>
