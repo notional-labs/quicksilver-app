@@ -3430,10 +3430,11 @@ a {
 .staking-flow--allocate-stake
   .staking-flow__body--all__validators
   .table__body {
-  max-height: calc(
+  max-height: 30vh;
+  /* max-height: calc(
     var(--window-height) -
       (var(--selection--fixed-height) + var(--header-height) + 246px)
-  );
+  ); */
 }
 .staking-flow--allocate-stake
   .staking-flow__body--all__validators
@@ -3896,10 +3897,11 @@ a {
 }
 .staking-flow__body--all__validators .table__body {
   height: auto;
-  max-height: calc(
+  max-height: 30vh;
+  /* max-height: calc(
     var(--window-height) -
       (var(--selection--fixed-height) + var(--header-height) + 323px)
-  );
+  ); */
   overflow-y: auto;
   overflow-x: visible;
   border-bottom-left-radius: 12px;
@@ -4125,7 +4127,7 @@ a {
   pointer-events: none;
   background: #0e0e0e;
   width: 100%;
-  bottom: 42px;
+  bottom: 82px;
   z-index: 99;
   padding: 0 40px;
 }

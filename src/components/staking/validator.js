@@ -320,10 +320,10 @@ function Validator({
                                       {/* Make this Validator Favourite */}
                                       <div class="make-it-favourite">
                                         <input
-                                          id="favourite-1"
+                                          id={`favourite-${index + 1}`}
                                           type="checkbox"
                                         />
-                                        <label for="favourite-1">
+                                        <label for={`favourite-${index + 1}`}>
                                           <svg
                                             width="20"
                                             height="20"

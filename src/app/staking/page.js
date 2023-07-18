@@ -38,6 +38,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: true,
     },
     {
       img: kraken,
@@ -48,6 +49,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
     {
       img: stir,
@@ -58,6 +60,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
     {
       img: terravegas,
@@ -68,6 +71,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
     {
       img: sanka,
@@ -78,6 +82,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
     {
       img: smartnodes,
@@ -88,6 +93,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
     {
       img: fishking,
@@ -98,6 +104,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
     {
       img: aurastake,
@@ -108,6 +115,7 @@ function Staking() {
       votingRecord: "12/65",
       PRScore: "LEVEL 01",
       isSelected: false,
+      isLock: false,
     },
   ]);
   const [selectedValidator, setSelectedValidors] = useState([]);

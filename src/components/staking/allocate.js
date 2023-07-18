@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Allocate({
   setStep,
@@ -8,6 +8,7 @@ function Allocate({
   selectedValidator,
   setSelectedValidors,
 }) {
+  const [totalStake, setTotalStake] = useState(100);
   function handleChange(val, name, index) {
     const newObj = selectedValidator[index];
     newObj.stakingAllocation = val;
@@ -16,7 +17,32 @@ function Allocate({
       newObj,
       ...selectedValidator.slice(index + 1),
     ]);
+    const sum = selectedValidator.reduce((total, item) => {
+      return total + Number(item.stakingAllocation);
+    }, 0);
+    setTotalStake(sum);
   }
+  function handleBlur(val, name, index) {
+    console.log("val", typeof val);
+    const newObj = selectedValidator[index];
+    newObj.stakingAllocation = Number(val).toFixed(2);
+    setSelectedValidors([
+      ...selectedValidator.slice(0, index),
+      newObj,
+      ...selectedValidator.slice(index + 1),
+    ]);
+  }
+
+  function toggleLog(index) {
+    const newObj = selectedValidator[index];
+    newObj.isLock = !newObj.isLock;
+    setSelectedValidors([
+      ...selectedValidator.slice(0, index),
+      newObj,
+      ...selectedValidator.slice(index + 1),
+    ]);
+  }
+
   useEffect(() => {
     const val = (100 / selectedValidator.length).toFixed(2);
     setSelectedValidors(
@@ -24,7 +50,12 @@ function Allocate({
         return { ...item, stakingAllocation: val };
       })
     );
+    const sum = selectedValidator.reduce((total, item) => {
+      return total + Number(item.stakingAllocation);
+    }, 0);
+    setTotalStake(sum);
   }, []);
+
   return (
     <div>
       {/*Staking Start Here */}
@@ -192,7 +223,8 @@ function Allocate({
                                 type="number"
                                 class="form-control set-stake-allocation"
                                 placeholder={item.stakingAllocation || 0.0}
-                                value={item.stakingAllocation || 0.0}
+                                value={item?.stakingAllocation}
+                                disabled={item.isLock}
                                 onChange={(e) => {
                                   console.log(e);
                                   handleChange(
@@ -201,14 +233,24 @@ function Allocate({
                                     index
                                   );
                                 }}
+                                onBlur={(e) => {
+                                  handleBlur(e.target.value, item.name, index);
+                                }}
                               />
                               {/*Unlock Icon */}
                               <div
-                                class="stake-allocation-percentage__unlock"
+                                class={`${
+                                  item.isLock
+                                    ? "stake-allocation-percentage__lock"
+                                    : "stake-allocation-percentage__unlock"
+                                } `}
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="bottom"
                                 data-bs-html="true"
                                 title="Lock to set stake allocation."
+                                onClick={() => {
+                                  toggleLog(index);
+                                }}
                               >
                                 <svg
                                   width="24"
@@ -248,7 +290,16 @@ function Allocate({
                                 </svg>
                               </div>
                               {/*Lock Icon */}
-                              <div class="stake-allocation-percentage__lock">
+                              <div
+                                class={`${
+                                  item.isLock
+                                    ? "stake-allocation-percentage__unlock"
+                                    : "stake-allocation-percentage__lock"
+                                } `}
+                                onClick={() => {
+                                  toggleLog(index);
+                                }}
+                              >
                                 <svg
                                   width="24"
                                   height="24"
@@ -378,7 +429,9 @@ function Allocate({
                     <div class="network__validators text-almostwhite">
                       {/*Selected Validator Count */}
                       <h6 class="font-demi text-lightgray">
-                        <span class="selected-allocated-percentage">100%</span>{" "}
+                        <span class="selected-allocated-percentage">
+                          {totalStake}%
+                        </span>{" "}
                         stake allocated
                       </h6>
                       {/*Selected Validator Instrunction */}
@@ -417,7 +470,11 @@ function Allocate({
                         Exceeds Max Number of Validators
                       </span>
                       {/*[ Error ] [ Exceeds 100% stake allocation ] */}
-                      <span class="error-message error-message__exceeds-allocation">
+                      <span
+                        class={`error-message error-message__exceeds-allocation ${
+                          totalStake > 100 && "show"
+                        }`}
+                      >
                         <svg
                           width="12"
                           height="13"
@@ -851,7 +908,7 @@ function Allocate({
                   {/*<a href="#" class="btn btn-primary disabled">Next</a> */}
                   <button
                     type="submit"
-                    class="btn btn-primary"
+                    class={`btn btn-primary ${totalStake > 100 && "disabled"}`}
                     data-bs-toggle="modal"
                     data-bs-target="#modal_stake-summary"
                     role="button"
