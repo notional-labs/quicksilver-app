@@ -9,6 +9,15 @@ function Allocate({
   setSelectedValidors,
 }) {
   const [totalStake, setTotalStake] = useState(100);
+  const [autoRegulate, setAutoRegulate] = useState(true);
+
+  function calculateSum() {
+    const sum = selectedValidator.reduce((total, item) => {
+      return total + Number(item.stakingAllocation);
+    }, 0);
+    setTotalStake(sum);
+  }
+
   function handleChange(val, name, index) {
     const newObj = selectedValidator[index];
     newObj.stakingAllocation = val;
@@ -17,11 +26,9 @@ function Allocate({
       newObj,
       ...selectedValidator.slice(index + 1),
     ]);
-    const sum = selectedValidator.reduce((total, item) => {
-      return total + Number(item.stakingAllocation);
-    }, 0);
-    setTotalStake(sum);
+    calculateSum();
   }
+
   function handleBlur(val, name, index) {
     console.log("val", typeof val);
     const newObj = selectedValidator[index];
@@ -33,7 +40,7 @@ function Allocate({
     ]);
   }
 
-  function toggleLog(index) {
+  function toggleLock(index) {
     const newObj = selectedValidator[index];
     newObj.isLock = !newObj.isLock;
     setSelectedValidors([
@@ -41,6 +48,37 @@ function Allocate({
       newObj,
       ...selectedValidator.slice(index + 1),
     ]);
+    var lockedSum = 0;
+    var unlockedSum = 0;
+    var unlockCount = 0;
+    var lockCount = 0;
+    var indices = [];
+    if (newObj.isLock && autoRegulate) {
+      selectedValidator.map((item, index) => {
+        if (item.isLock) {
+          lockCount++;
+          lockedSum = lockedSum + Number(item.stakingAllocation);
+        } else {
+          indices.push(index);
+          unlockCount++;
+          unlockedSum = unlockedSum + Number(item.stakingAllocation);
+        }
+      });
+      const val = ((100 - lockedSum) / unlockCount).toFixed(2);
+      let indicesIndex = 0;
+      setSelectedValidors(
+        selectedValidator.map((item, index) => {
+          if (index == indices[indicesIndex]) {
+            indicesIndex++;
+            return { ...item, stakingAllocation: val };
+          } else {
+            return { ...item };
+          }
+        })
+      );
+      const sum = lockedSum + val * unlockCount;
+      setTotalStake(sum);
+    }
   }
 
   useEffect(() => {
@@ -50,10 +88,11 @@ function Allocate({
         return { ...item, stakingAllocation: val };
       })
     );
-    const sum = selectedValidator.reduce((total, item) => {
-      return total + Number(item.stakingAllocation);
-    }, 0);
-    setTotalStake(sum);
+    // const sum = selectedValidator.reduce((total, item) => {
+    //   return total + item.stakingAllocation;
+    // }, 0);
+    // console.log("SUMMM", sum);
+    setTotalStake(val * selectedValidator.length);
   }, []);
 
   return (
@@ -102,7 +141,10 @@ function Allocate({
                           id="toggleValidators"
                           type="checkbox"
                           class="form-check-toggle"
-                          checked
+                          checked={autoRegulate}
+                          onChange={() => {
+                            setAutoRegulate(!autoRegulate);
+                          }}
                         />
                         <label
                           for="toggleValidators"
@@ -249,7 +291,7 @@ function Allocate({
                                 data-bs-html="true"
                                 title="Lock to set stake allocation."
                                 onClick={() => {
-                                  toggleLog(index);
+                                  toggleLock(index);
                                 }}
                               >
                                 <svg
@@ -297,7 +339,7 @@ function Allocate({
                                     : "stake-allocation-percentage__lock"
                                 } `}
                                 onClick={() => {
-                                  toggleLog(index);
+                                  toggleLock(index);
                                 }}
                               >
                                 <svg
