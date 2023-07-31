@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { logo, keplr, atom } from "../assets/img/index";
+import { WalletSection } from "@/provider/wallet";
 
 function Header() {
   return (
@@ -89,14 +91,15 @@ function Header() {
                 <div class="wallet-and-network__wallet">
                   {/* Wallet State -> Connect  */}
                   <div class="wallet-and-network__wallet--connect">
-                    <button
+                    {/* <button
                       class="btn btn--sm btn-primary"
                       data-bs-toggle="modal"
                       data-bs-target="#modal_connect-wallet"
                       role="button"
                     >
                       Connect Wallet
-                    </button>
+                    </button> */}
+                    <WalletSection />
                   </div>
                   {/* Wallet State -> Connected  */}
                   <div class="wallet-and-network__wallet--connected d-none">

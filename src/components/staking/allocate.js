@@ -178,7 +178,7 @@ function Allocate({
                           data-bs-toggle="tooltip"
                           data-bs-placement="bottom"
                           data-bs-html="true"
-                          title="Use the input fields to signal your intent to the protocol <br> for how you would like your stake to be allocated at the <br> next epoch. All users' staking intent is aggregated and <br> the stakes redelegated to match the aggregate intent."
+                          title="Use the input fields to signal your intent to the protocol <br> for how you would like your stake to be allocated at the <br> next epoch. All users staking intent is aggregated and <br> the stakes redelegated to match the aggregate intent."
                         >
                           STAKE ALLOCATION %
                         </p>
@@ -554,7 +554,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-1">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img
+                          <Image
                             src="./assets/img/networks/lavender-2.png"
                             alt=""
                           />
@@ -565,7 +565,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/lavender-2.png"
                                     alt=""
                                   />
@@ -605,7 +605,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-2">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img src="./assets/img/networks/sanka.png" alt="" />
+                          <Image src="./assets/img/networks/sanka.png" alt="" />
                         </div>
                         {/*Tooltip for each Validator */}
                         <div class="selected-validators__info--each__tooltip">
@@ -613,7 +613,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/sanka.png"
                                     alt=""
                                   />
@@ -651,7 +651,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-3">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img
+                          <Image
                             src="./assets/img/networks/terravegas.png"
                             alt=""
                           />
@@ -662,7 +662,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/terravegas.png"
                                     alt=""
                                   />
@@ -700,7 +700,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-4">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img src="./assets/img/networks/stir.png" alt="" />
+                          <Image src="./assets/img/networks/stir.png" alt="" />
                         </div>
                         {/*Tooltip for each Validator */}
                         <div class="selected-validators__info--each__tooltip">
@@ -708,7 +708,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/stir.png"
                                     alt=""
                                   />
@@ -746,7 +746,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-5">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img
+                          <Image
                             src="./assets/img/networks/lavender.png"
                             alt=""
                           />
@@ -757,7 +757,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/lavender.png"
                                     alt=""
                                   />
@@ -797,7 +797,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-6">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img
+                          <Image
                             src="./assets/img/networks/smartnodes.png"
                             alt=""
                           />
@@ -808,7 +808,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/smartnodes.png"
                                     alt=""
                                   />
@@ -846,7 +846,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-7">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img
+                          <Image
                             src="./assets/img/networks/fishking.png"
                             alt=""
                           />
@@ -857,7 +857,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/fishking.png"
                                     alt=""
                                   />
@@ -895,7 +895,7 @@ function Allocate({
                       <div class="selected-validators__info--each selected-validators__info--each-8">
                         {/*Image for each Validator */}
                         <div class="image-ratio image-ratio--square">
-                          <img
+                          <Image
                             src="./assets/img/networks/aurastake.png"
                             alt=""
                           />
@@ -906,7 +906,7 @@ function Allocate({
                             <div class="network">
                               <div class="image-wrapper">
                                 <div class="image-ratio image-ratio--square">
-                                  <img
+                                  <Image
                                     src="./assets/img/networks/aurastake.png"
                                     alt=""
                                   />
@@ -990,7 +990,7 @@ function Allocate({
               <div class="modal-title" id="modal_connect-walletLabel">
                 <div class="image-wrapper">
                   <div class="image-ratio image-ratio--square">
-                    <img src="./assets/img/favicon.png" alt="" />
+                    <Image src="./assets/img/favicon.png" alt="" />
                   </div>
                 </div>
                 <h6 class="h6-lg font-bold text-lightgray">
@@ -1004,7 +1004,8 @@ function Allocate({
               </div>
               <div class="modal-addition-info">
                 <p class="copy-v-sm font-demi">
-                  Don't have a wallet? <a href="#">See supported wallets</a>
+                  Don&apos;t have a wallet?{" "}
+                  <a href="#">See supported wallets</a>
                 </p>
               </div>
               <button
@@ -1032,7 +1033,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/kaplr-circle.svg"
                                   alt=""
                                 />
@@ -1055,7 +1056,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/leap.svg"
                                   alt=""
                                 />
@@ -1079,7 +1080,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/cosmos.svg"
                                   alt=""
                                 />
@@ -1117,7 +1118,7 @@ function Allocate({
               <div class="modal-title" id="modal_switch-networkLabel">
                 <div class="image-wrapper">
                   <div class="image-ratio image-ratio--square">
-                    <img src="./assets/img/favicon.png" alt="" />
+                    <Image src="./assets/img/favicon.png" alt="" />
                   </div>
                 </div>
                 <h6 class="h6-lg font-bold text-lightgray">Switch Network</h6>
@@ -1164,7 +1165,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/atom.svg"
                                   alt=""
                                 />
@@ -1198,7 +1199,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/osmosis.svg"
                                   alt=""
                                 />
@@ -1230,7 +1231,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/regen.svg"
                                   alt=""
                                 />
@@ -1263,7 +1264,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1290,7 +1291,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/evmos.svg"
                                   alt=""
                                 />
@@ -1317,7 +1318,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/juno.svg"
                                   alt=""
                                 />
@@ -1344,7 +1345,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1371,7 +1372,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1398,7 +1399,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1425,7 +1426,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1452,7 +1453,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1479,7 +1480,7 @@ function Allocate({
                           <div class="content-wrapper__intro">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <img
+                                <Image
                                   src="./assets/img/networks/stargaze.svg"
                                   alt=""
                                 />
@@ -1518,7 +1519,7 @@ function Allocate({
               <div class="modal-title" id="modal_stake-summaryLabel">
                 <div class="image-wrapper">
                   <div class="image-ratio image-ratio--square">
-                    <img src="./assets/img/favicon.png" alt="" />
+                    <Image src="./assets/img/favicon.png" alt="" />
                   </div>
                 </div>
                 {/*data-heading include the after approval heading text */}
@@ -1593,7 +1594,10 @@ function Allocate({
                       <div class="network">
                         <div class="image-wrapper">
                           <div class="image-ratio image-ratio--square">
-                            <img src="./assets/img/networks/atom.svg" alt="" />
+                            <Image
+                              src="./assets/img/networks/atom.svg"
+                              alt=""
+                            />
                           </div>
                         </div>
                         <h6 class="font-medium">ATOM</h6>
@@ -1629,7 +1633,7 @@ function Allocate({
                       <div class="network">
                         <div class="image-wrapper">
                           <div class="image-ratio image-ratio--square">
-                            <img
+                            <Image
                               src="./assets/img/networks/q-atom.svg"
                               alt=""
                             />
@@ -1673,7 +1677,7 @@ function Allocate({
               <div class="modal-title" id="modal_stake-summaryLabel">
                 <div class="image-wrapper">
                   <div class="image-ratio image-ratio--square">
-                    <img src="./assets/img/favicon.png" alt="" />
+                    <Image src="./assets/img/favicon.png" alt="" />
                   </div>
                 </div>
                 {/*data-heading include the after approval heading text */}
@@ -1755,7 +1759,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/lavender.png"
                                 alt=""
                               />
@@ -1775,7 +1779,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/kraken.png"
                                 alt=""
                               />
@@ -1795,7 +1799,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/stir.png"
                                 alt=""
                               />
@@ -1815,7 +1819,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/terravegas.png"
                                 alt=""
                               />
@@ -1835,7 +1839,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/sanka.png"
                                 alt=""
                               />
@@ -1855,7 +1859,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/smartnodes.png"
                                 alt=""
                               />
@@ -1875,7 +1879,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/fishking.png"
                                 alt=""
                               />
@@ -1895,7 +1899,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/aurastake.png"
                                 alt=""
                               />
@@ -1915,7 +1919,7 @@ function Allocate({
                         <div class="network">
                           <div class="image-wrapper">
                             <div class="image-ratio image-ratio--square">
-                              <img
+                              <Image
                                 src="./assets/img/networks/aurastake.png"
                                 alt=""
                               />
@@ -2011,7 +2015,7 @@ function Allocate({
               <div class="modal-title" id="modal_approve-transectionLabel">
                 <div class="image-wrapper">
                   <div class="image-ratio image-ratio--square">
-                    <img src="./assets/img/favicon.png" alt="" />
+                    <Image src="./assets/img/favicon.png" alt="" />
                   </div>
                 </div>
                 {/*data-heading include the after approval heading text */}

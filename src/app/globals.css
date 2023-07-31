@@ -4440,7 +4440,7 @@ a {
 }
 .participation-rewards__claim--head {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 .participation-rewards__claim--head .form-check {
@@ -4511,7 +4511,7 @@ a {
 }
 .assets__own {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   margin: 0 -12px;
 }
 .assets__own .assets__profile,
