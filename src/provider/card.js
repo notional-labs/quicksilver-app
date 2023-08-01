@@ -32,6 +32,7 @@ export const WalletCardSection = ({ chainName }) => {
     address,
     message,
     wallet,
+    chain,
   } = useChain(chainName);
 
   // Events
@@ -55,7 +56,12 @@ export const WalletCardSection = ({ chainName }) => {
       }
       connecting={<Connecting />}
       connected={
-        <Connected buttonText={"My Wallet"} onClick={onClickOpenView} />
+        <Connected
+          onClick={onClickOpenView}
+          wallet={wallet}
+          address={address}
+          chain={chain}
+        />
       }
       rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
       error={<Error buttonText="Change Wallet" onClick={onClickOpenView} />}

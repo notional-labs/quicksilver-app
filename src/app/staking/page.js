@@ -24,6 +24,7 @@ import {
 } from "@image/index";
 import Validator from "@/components/staking/validator";
 import Allocate from "@/components/staking/allocate";
+import { useChain } from "@cosmos-kit/react";
 
 function Staking() {
   const [step, setStep] = useState(1);
@@ -119,6 +120,9 @@ function Staking() {
     },
   ]);
   const [selectedValidator, setSelectedValidors] = useState([]);
+
+  const { isWalletConnected, openView } = useChain("cosmoshub");
+  console.log("isWalletconnected", isWalletConnected);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [step]);
@@ -403,17 +407,31 @@ function Staking() {
                       </div>
                     </div>
                     <div class="staking_tab--btn mt-4">
-                      <button
-                        class="btn btn-primary w-100"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal_connect-wallet"
-                        role="button"
-                        onClick={() => {
-                          setStep(2);
-                        }}
-                      >
-                        Connect Wallet
-                      </button>
+                      {isWalletConnected ? (
+                        <button
+                          class="btn btn-primary w-100"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal_connect-wallet"
+                          role="button"
+                          onClick={() => {
+                            setStep(2);
+                          }}
+                        >
+                          Next
+                        </button>
+                      ) : (
+                        <button
+                          class="btn btn-primary w-100"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal_connect-wallet"
+                          role="button"
+                          onClick={() => {
+                            openView();
+                          }}
+                        >
+                          Connect Wallet
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div

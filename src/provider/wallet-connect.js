@@ -5,26 +5,40 @@ import { IoWallet } from "react-icons/io5";
 import { FiAlertTriangle } from "react-icons/fi";
 import { WalletStatus } from "@cosmos-kit/core";
 import Image from "next/image";
-import { keplr } from "@/assets/img";
+import { keplr, leap, cosmos } from "@/assets/img";
 
-export const ConnectedCustomWallet = ({ onClick }) => {
+export const ConnectedCustomWallet = ({ onClick, wallet, address, chain }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [copied, setCopied] = useState(false);
+  console.log("wallet", wallet, address, chain);
   return (
     <div class="wallet-and-network__wallet--connected">
       <a
         class="wallet"
         onClick={() => {
-          console.log("HDDHDH");
           setShowDropdown(!showDropdown);
         }}
       >
         <div class="image-wrapper">
           <div class="image-ratio image-ratio--square">
-            <Image src={keplr} alt="keplr" />
+            <>
+              {wallet.prettyName === "Keplr" ? (
+                <Image src={keplr} alt="keplr" />
+              ) : wallet.prettyName === "Leap" ? (
+                <Image src={leap} alt="leap" />
+              ) : wallet.prettyName === "Cosmostation" ? (
+                <Image src={cosmos} alt="cosmostation" />
+              ) : (
+                <></>
+              )}
+            </>
           </div>
         </div>
         <div class="text-wrapper">
-          <p class="copy-sm text-lightgray">Cosmos12...243</p>
+          {/* <p class="copy-sm text-lightgray">Cosmos12...243</p> */}
+          <p class="copy-sm text-lightgray">
+            {address.substring(0, 8)}...{address.substring(address.length - 3)}
+          </p>
         </div>
       </a>
       {/* Wallet State -> Dropdown  */}
@@ -33,11 +47,20 @@ export const ConnectedCustomWallet = ({ onClick }) => {
           <div class="wallet__info--initial">
             <div class="image-wrapper">
               <div class="image-ratio image-ratio--square">
-                <Image src={keplr} alt="keplr" />
+                {wallet.prettyName === "Keplr" ? (
+                  <Image src={keplr} alt="keplr" />
+                ) : wallet.prettyName === "Leap" ? (
+                  <Image src={leap} alt="leap" />
+                ) : wallet.prettyName === "Cosmostation" ? (
+                  <Image src={cosmos} alt="cosmostation" />
+                ) : (
+                  <></>
+                )}
+                {/* <Image src={keplr} alt="keplr" /> */}
               </div>
             </div>
             <div class="text-wrapper">
-              <h6 class="font-bold text-lightgray">Cosmos</h6>
+              <h6 class="font-bold text-lightgray">{chain.pretty_name}</h6>
               <div class="wallet-number">
                 {/* Put the full card number in attribute [ data-wallet-number ]  */}
                 <p
@@ -45,16 +68,22 @@ export const ConnectedCustomWallet = ({ onClick }) => {
                   id="walletNumber"
                   data-wallet-number="cosmos1h4324432432432412121c44"
                 >
-                  cosmos1h4zyy.......412121c44
+                  {/* cosmos1h4zyy.......412121c44 */}
+                  {address.substring(0, 13)}...
+                  {address.substring(address.length - 9)}
                 </p>
                 <a href="#">
                   <svg
-                    class="copy show"
+                    class={`copy ${!copied ? "show" : ""}`}
                     width="20"
                     height="21"
                     viewBox="0 0 20 21"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => {
+                      navigator.clipboard.writeText(address);
+                      setCopied(true);
+                    }}
                   >
                     <path
                       d="M16.6667 8H9.16667C8.24619 8 7.5 8.74619 7.5 9.66667V17.1667C7.5 18.0871 8.24619 18.8333 9.16667 18.8333H16.6667C17.5871 18.8333 18.3333 18.0871 18.3333 17.1667V9.66667C18.3333 8.74619 17.5871 8 16.6667 8Z"
@@ -70,7 +99,7 @@ export const ConnectedCustomWallet = ({ onClick }) => {
                     />
                   </svg>
                   <svg
-                    class="copied"
+                    class={`copied ${copied ? "show" : ""}`}
                     data-bs-toggle="tooltip"
                     data-bs-placement="bottom"
                     data-bs-html="true"
@@ -318,9 +347,14 @@ export const Disconnected = ({ buttonText, onClick }) => {
   );
 };
 
-export const Connected = ({ buttonText, onClick }) => {
+export const Connected = ({ onClick, wallet, address, chain }) => {
   return (
-    <ConnectedCustomWallet onClick={onClick} />
+    <ConnectedCustomWallet
+      onClick={onClick}
+      wallet={wallet}
+      address={address}
+      chain={chain}
+    />
     // <ConnectWalletButton buttonText={buttonText} onClickConnectBtn={onClick} />
   );
 };
