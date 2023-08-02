@@ -5,11 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import { ConnectWalletButton } from "./wallet-connect";
 import { ChainName } from "@cosmos-kit/core";
 import { WalletCardSection } from "./card";
+import { ChooseChain } from "./choose-chain";
+import SwitchNetwork from "@/components/switchNetwork";
 
 export const WalletSection = () => {
   const [chainName, setChainName] = useState("cosmoshub");
   const { chainRecords, getChainLogo } = useManager();
-
+  console.log("Checking", chainRecords);
   const chainOptions = useMemo(
     () =>
       chainRecords.map((chainRecord) => {
@@ -18,6 +20,7 @@ export const WalletSection = () => {
           label: chainRecord?.chain.pretty_name,
           value: chainRecord?.name,
           icon: getChainLogo(chainRecord.name),
+          status: chainRecord.chain.status,
         };
       }),
     [chainRecords, getChainLogo]
@@ -27,40 +30,86 @@ export const WalletSection = () => {
     setChainName(window.localStorage.getItem("selected-chain") || "cosmoshub");
   }, []);
 
-  const onChainChange = async (selectedValue) => {
+  const onChainChange = async (selectedValue, closeModal) => {
     setChainName(selectedValue?.chainName);
     if (selectedValue?.chainName) {
       window?.localStorage.setItem("selected-chain", selectedValue?.chainName);
     } else {
       window?.localStorage.removeItem("selected-chain");
     }
+    closeModal();
   };
 
-  //   const chooseChain = (
-  //     <ChooseChain
-  //       chainName={chainName}
-  //       chainInfos={chainOptions}
-  //       onChange={onChainChange}
-  //     />
-  //   );
+  const chooseChain = (
+    <ChooseChain
+      chainName={chainName}
+      chainInfos={chainOptions}
+      onChange={onChainChange}
+    />
+  );
 
+  const chooseCustomChain = (
+    <SwitchNetwork
+      chainName={chainName}
+      chainInfos={chainOptions}
+      onChange={onChainChange}
+    />
+  );
   return (
     <Center p={0}>
-      <Grid
+      {/* <Grid
         w="full"
         maxW="sm"
         templateColumns="1fr"
         alignItems="center"
         justifyContent="center"
         p={0}
-      >
-        {/* <GridItem>{chooseChain}</GridItem> */}
-        {chainName ? (
-          <WalletCardSection chainName={chainName}></WalletCardSection>
-        ) : (
-          <ConnectWalletButton buttonText={"Connect Wallet"} isDisabled />
-        )}
-      </Grid>
+      > */}
+      {/* <GridItem>{chooseChain}</GridItem> */}
+      <div class="wallet-and-network__network">
+        <div class="wallet-and-network__network--notifications">
+          <a href="#">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.732 20.9995C13.5561 21.3026 13.3038 21.5542 13.0002 21.729C12.6966 21.9039 12.3523 21.996 12.002 21.996C11.6516 21.996 11.3073 21.9039 11.0037 21.729C10.7001 21.5542 10.4478 21.3026 10.272 20.9995M18.002 7.99951C18.002 6.40821 17.3698 4.88209 16.2446 3.75687C15.1194 2.63165 13.5933 1.99951 12.002 1.99951C10.4107 1.99951 8.88453 2.63165 7.75931 3.75687C6.63409 4.88209 6.00195 6.40821 6.00195 7.99951C6.00195 14.9995 3.00195 16.9995 3.00195 16.9995H21.002C21.002 16.9995 18.002 14.9995 18.002 7.99951Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+        <div>{chooseCustomChain}</div>
+        {/* <div
+            class="wallet-and-network__network--active"
+            onClick={() => {
+              console.log("1244441243");
+              setShowSwitchNetwork(true);
+            }}
+          >
+            <a
+              data-bs-toggle="modal"
+              data-bs-target="#modal_switch-network"
+              role="button"
+            >
+              Cosmos
+            </a>
+          </div> */}
+      </div>
+      {/* <GridItem>{chooseCustomChain}</GridItem> */}
+      {chainName ? (
+        <WalletCardSection chainName={chainName}></WalletCardSection>
+      ) : (
+        <ConnectWalletButton buttonText={"Connect Wallet"} isDisabled />
+      )}
+      {/* </Grid> */}
     </Center>
   );
 };

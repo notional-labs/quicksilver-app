@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
       <body>
         <CreateCosmosApp>
           <Header />
-          <div style={{ marginTop: "96px" }}>{children}</div>
+          <div className="main-layout">{children}</div>
           <Footer />
         </CreateCosmosApp>
       </body>

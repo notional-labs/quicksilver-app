@@ -101,7 +101,7 @@ export const WalletCardSection = ({ chainName }) => {
 
   return (
     <>
-      {connectWalletWarn && <GridItem>{connectWalletWarn}</GridItem>}
+      {/* {connectWalletWarn && <GridItem>{connectWalletWarn}</GridItem>} */}
       <GridItem px={6}>
         <Stack
           justifyContent="center"

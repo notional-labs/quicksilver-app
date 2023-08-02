@@ -7,8 +7,10 @@ import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { wallets as leapWallets } from "@cosmos-kit/leap";
 import { chains, assets } from "chain-registry";
 import ConnectWalletModal from "@/components/walletConnectModal";
+import { customChain } from "@/utils/customChains";
 
 function CreateCosmosApp({ children }) {
+  // console.log("cjaiscnascina", chains);
   const signerOptions = {
     // signingStargate: (_chain: Chain) => {
     //   return getSigningCosmosClientOptions();
@@ -30,7 +32,7 @@ function CreateCosmosApp({ children }) {
     // <ChakraProvider theme={defaultTheme}>
     <ChakraProvider theme={theme}>
       <ChainProvider
-        chains={chains}
+        chains={customChain}
         assetLists={assets}
         wallets={[...cosmostationWallets, ...leapWallets, ...keplrWallets]}
         walletConnectOptions={{
