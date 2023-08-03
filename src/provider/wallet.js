@@ -1,11 +1,10 @@
 "use client";
 import { useManager } from "@cosmos-kit/react";
-import { Center, Grid, GridItem } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { ConnectWalletButton } from "./wallet-connect";
 import { ChainName } from "@cosmos-kit/core";
 import { WalletCardSection } from "./card";
-import { ChooseChain } from "./choose-chain";
 import SwitchNetwork from "@/components/switchNetwork";
 
 export const WalletSection = () => {
@@ -40,14 +39,6 @@ export const WalletSection = () => {
     closeModal();
   };
 
-  const chooseChain = (
-    <ChooseChain
-      chainName={chainName}
-      chainInfos={chainOptions}
-      onChange={onChainChange}
-    />
-  );
-
   const chooseCustomChain = (
     <SwitchNetwork
       chainName={chainName}
@@ -57,15 +48,6 @@ export const WalletSection = () => {
   );
   return (
     <Center p={0}>
-      {/* <Grid
-        w="full"
-        maxW="sm"
-        templateColumns="1fr"
-        alignItems="center"
-        justifyContent="center"
-        p={0}
-      > */}
-      {/* <GridItem>{chooseChain}</GridItem> */}
       <div class="wallet-and-network__network">
         <div class="wallet-and-network__network--notifications">
           <a href="#">
@@ -87,29 +69,12 @@ export const WalletSection = () => {
           </a>
         </div>
         <div>{chooseCustomChain}</div>
-        {/* <div
-            class="wallet-and-network__network--active"
-            onClick={() => {
-              console.log("1244441243");
-              setShowSwitchNetwork(true);
-            }}
-          >
-            <a
-              data-bs-toggle="modal"
-              data-bs-target="#modal_switch-network"
-              role="button"
-            >
-              Cosmos
-            </a>
-          </div> */}
       </div>
-      {/* <GridItem>{chooseCustomChain}</GridItem> */}
       {chainName ? (
         <WalletCardSection chainName={chainName}></WalletCardSection>
       ) : (
         <ConnectWalletButton buttonText={"Connect Wallet"} isDisabled />
       )}
-      {/* </Grid> */}
     </Center>
   );
 };
