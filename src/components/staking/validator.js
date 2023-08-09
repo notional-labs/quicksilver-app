@@ -54,17 +54,10 @@ function Validator({ setStep }) {
           setValidators(validatorList);
         } else {
           const tempValidator = JSON.parse(JSON.stringify(validatorList));
-          let newData = tempValidator
-            .filter((val) => val.status === "BOND_STATUS_BONDED")
-            .map((val) => {
-              if (selectedValidator.find((x) => x.address === val.address)) {
-                return (val = { ...val, isSelected: true });
-              } else {
-                return (val = { ...val, isSelected: false });
-              }
-            });
+          let newData = tempValidator.filter(
+            (val) => val.status === "BOND_STATUS_BONDED"
+          );
           setValidators(newData);
-          // setValidators(validatorList);
         }
       } else {
         setSortType("asc");
@@ -94,24 +87,17 @@ function Validator({ setStep }) {
     }
   }
   function handleValidatorChange(item, index) {
-    const tempValidator = JSON.parse(JSON.stringify(validators));
-    console.log("checking", tempValidator, item, index);
-    tempValidator[index].isSelected = !tempValidator[index].isSelected;
-    setValidators(tempValidator);
-    dispatch(getValidatorListSuccess(tempValidator));
-    const validator = selectedValidator.find(
+    const validator = selectedValidatorList.find(
       (element) => element.name == item.name
     );
     if (validator) {
-      setSelectedValidors((current) =>
-        current.filter((element) => element.name != item.name)
-      );
-      const tempSelectedValidors = selectedValidator.filter(
-        (element) => element.name != item.name
-      );
+      const tempSelectedValidors = JSON.parse(
+        JSON.stringify(selectedValidatorList)
+      ).filter((element) => element.name != item.name);
+      setSelectedValidors(tempSelectedValidors);
       dispatch(setSelectedValidatorList(tempSelectedValidors));
     } else {
-      setSelectedValidors([...selectedValidator, item]);
+      setSelectedValidors([...selectedValidatorList, item]);
       dispatch(setSelectedValidatorList([...selectedValidatorList, item]));
     }
   }
@@ -148,24 +134,12 @@ function Validator({ setStep }) {
     const value = !showInactive;
     const tempValidator = JSON.parse(JSON.stringify(validatorList));
     if (value === true) {
-      let newData = tempValidator.map((val) => {
-        if (selectedValidator.find((x) => x.address === val.address)) {
-          return (val = { ...val, isSelected: true });
-        } else {
-          return (val = { ...val, isSelected: false });
-        }
-      });
+      let newData = tempValidator;
       setValidators(newData);
     } else if (value === false) {
-      let newData = tempValidator
-        .filter((val) => val.status === "BOND_STATUS_BONDED")
-        .map((val) => {
-          if (selectedValidator.find((x) => x.address === val.address)) {
-            return (val = { ...val, isSelected: true });
-          } else {
-            return (val = { ...val, isSelected: false });
-          }
-        });
+      let newData = tempValidator.filter(
+        (val) => val.status === "BOND_STATUS_BONDED"
+      );
       setValidators(newData);
     }
     setShowInactive(!showInactive);

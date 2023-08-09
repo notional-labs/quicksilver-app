@@ -75,12 +75,6 @@ function Favorite() {
     }
   }
   function handleValidatorChange(item, index) {
-    // can be removed after removing the dependency on isSelected
-    const tempValidator = JSON.parse(JSON.stringify(validatorList));
-    const ind = validatorList.findIndex((obj) => obj.name == item.name);
-    tempValidator[ind].isSelected = !tempValidator[ind].isSelected;
-    dispatch(getValidatorListSuccess(tempValidator));
-
     const validator = selectedValidatorList.find(
       (element) => element.name == item.name
     );
@@ -114,24 +108,11 @@ function Favorite() {
   //     const value = !showInactive;
   //     const tempValidator = JSON.parse(JSON.stringify(validatorList));
   //     if (value === true) {
-  //       let newData = tempValidator.map((val) => {
-  //         if (selectedValidatorList.find((x) => x.address === val.address)) {
-  //           return (val = { ...val, isSelected: true });
-  //         } else {
-  //           return (val = { ...val, isSelected: false });
-  //         }
-  //       });
+  //       let newData = tempValidator
   //       setValidators(newData);
   //     } else if (value === false) {
   //       let newData = tempValidator
   //         .filter((val) => val.status === "BOND_STATUS_BONDED")
-  //         .map((val) => {
-  //           if (selectedValidatorList.find((x) => x.address === val.address)) {
-  //             return (val = { ...val, isSelected: true });
-  //           } else {
-  //             return (val = { ...val, isSelected: false });
-  //           }
-  //         });
   //       setValidators(newData);
   //     }
   //     setShowInactive(!showInactive);

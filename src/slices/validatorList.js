@@ -87,7 +87,6 @@ export function _loadValsAsync(chainId) {
               votingPowerDiff: "6.18%",
               votingRecord: "12/65",
               PRScore: "LEVEL 01",
-              isSelected: false,
               isLock: true,
             };
           });
