@@ -7,7 +7,9 @@ import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { wallets as leapWallets } from "@cosmos-kit/leap";
 import { chains, assets } from "chain-registry";
 import ConnectWalletModal from "@/components/walletConnectModal";
-import { customChain } from "@/utils/customChains";
+// import { customChain } from "@/utils/chains/customChains";
+// import { devChains } from "@/utils/chains/dev";
+import { ChainInfos } from "@/utils/chains";
 
 function CreateCosmosApp({ children }) {
   // console.log("cjaiscnascina", chains);
@@ -32,7 +34,9 @@ function CreateCosmosApp({ children }) {
     // <ChakraProvider theme={defaultTheme}>
     <ChakraProvider theme={theme}>
       <ChainProvider
-        chains={customChain}
+        // chains={customChain}
+        // chains={devChains}
+        chains={ChainInfos}
         assetLists={assets}
         wallets={[...cosmostationWallets, ...leapWallets, ...keplrWallets]}
         walletConnectOptions={{

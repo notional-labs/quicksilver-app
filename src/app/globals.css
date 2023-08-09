@@ -4084,11 +4084,15 @@ a {
 .staking-flow__body--all__validators .table .no-favourites__icon-wrapper {
   margin-bottom: 18px;
   background: var(--bs-table-background);
+  display: flex;
+  justify-content: center;
+  border: none;
 }
 .staking-flow__body--all__validators .table .no-favourites__text-wrapper {
   padding: 0;
   margin-bottom: 0;
   background-color: var(--bs-table-background);
+  border: none;
 }
 .staking-flow__body--all__validators .table .no-favourites__text-wrapper h4 {
   margin-bottom: 12px;
@@ -4122,6 +4126,7 @@ a {
 .staking-flow__body--all__validators .table .no-result-found__text-wrapper {
   padding: 0;
   background: transparent;
+  border: none;
 }
 .staking-flow__body--all__validators .table .no-result-found__text-wrapper h6 {
   line-height: 1.2;

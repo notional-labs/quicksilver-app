@@ -3,6 +3,8 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import Footer from "@/components/footer";
 import CreateCosmosApp from "../provider/chainProvider";
+import { Providers } from "@/slices/Provider";
+
 export const metadata = {
   title: "Quick Silver",
   description:
@@ -14,9 +16,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <CreateCosmosApp>
-          <Header />
-          <div className="main-layout">{children}</div>
-          <Footer />
+          <Providers>
+            <Header />
+            <div className="main-layout">{children}</div>
+            <Footer />
+          </Providers>
         </CreateCosmosApp>
       </body>
     </html>

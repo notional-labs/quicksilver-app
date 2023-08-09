@@ -8,7 +8,7 @@ import { WalletCardSection } from "./card";
 import SwitchNetwork from "@/components/switchNetwork";
 
 export const WalletSection = () => {
-  const [chainName, setChainName] = useState("cosmoshub");
+  const [chainName, setChainName] = useState("elgafar-1");
   const { chainRecords, getChainLogo } = useManager();
   console.log("Checking", chainRecords);
   const chainOptions = useMemo(
@@ -26,7 +26,7 @@ export const WalletSection = () => {
   );
 
   useEffect(() => {
-    setChainName(window.localStorage.getItem("selected-chain") || "cosmoshub");
+    setChainName(window.localStorage.getItem("selected-chain") || "elgafar-1");
   }, []);
 
   const onChainChange = async (selectedValue, closeModal) => {

@@ -1,13 +1,22 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-function Allocate({
-  setStep,
-  validators,
-  setValidators,
-  selectedValidator,
-  setSelectedValidors,
-}) {
+function Allocate({ setStep }) {
+  const dispatch = useDispatch();
+  const validatorList = useSelector(
+    (state) => state.validatorList.validatorList
+  );
+  const selectedValidatorList = useSelector(
+    (state) => state.validatorList.selectedValidatorList
+  );
+  const votingPowerSum = useSelector(
+    (state) => state.validatorList.votingPowerSum
+  );
+  const [selectedValidator, setSelectedValidors] = useState(
+    selectedValidatorList
+  );
+
   const [totalStake, setTotalStake] = useState(100);
   const [autoRegulate, setAutoRegulate] = useState(true);
 
@@ -107,7 +116,7 @@ function Allocate({
                 setStep(2);
               }}
             >
-              <a href="#">Back</a>
+              <a>Back</a>
             </div>
             <div class="staking-flow__header--title text-almostwhite">
               <h5
@@ -385,12 +394,22 @@ function Allocate({
                           <div class="table__body--col">
                             <div class="voting-power">
                               <p class="copy-normal">{item.votingPower}</p>
-                              <span>{item.votingPowerDiff}</span>
+                              {/* <span>{item.votingPowerDiff}</span> */}
+                              <span>
+                                {(
+                                  (Number(item.votingPower) /
+                                    Number(votingPowerSum)) *
+                                  100
+                                ).toFixed(2)}{" "}
+                                %
+                              </span>
                             </div>
                           </div>
                           {/*Commisstion */}
                           <div class="table__body--col">
-                            <p class="copy-sm">{item.commission}</p>
+                            <p class="copy-sm">
+                              {Number(item.commission).toFixed(2)} %
+                            </p>
                           </div>
                           {/*Voting Record */}
                           <div class="table__body--col">
