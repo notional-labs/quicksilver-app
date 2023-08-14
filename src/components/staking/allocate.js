@@ -1,12 +1,10 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import StakingSummary from "./stakingSummaryModal";
+import TransactionStatusModal from "./transactionStatusModal";
 
 function Allocate({ setStep }) {
-  const dispatch = useDispatch();
-  const validatorList = useSelector(
-    (state) => state.validatorList.validatorList
-  );
   const selectedValidatorList = useSelector(
     (state) => state.validatorList.selectedValidatorList
   );
@@ -20,6 +18,9 @@ function Allocate({ setStep }) {
   const [totalStake, setTotalStake] = useState(100);
   const [autoRegulate, setAutoRegulate] = useState(true);
 
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+
   function calculateSum() {
     const sum = selectedValidator.reduce((total, item) => {
       return total + Number(item.stakingAllocation);
@@ -28,6 +29,12 @@ function Allocate({ setStep }) {
   }
 
   function handleChange(val, name, index) {
+    if (val < 0) {
+      val = 0;
+    }
+    if (val > 100) {
+      val = 100;
+    }
     const newObj = selectedValidator[index];
     newObj.stakingAllocation = val;
     setSelectedValidors([
@@ -73,21 +80,28 @@ function Allocate({ setStep }) {
           unlockedSum = unlockedSum + Number(item.stakingAllocation);
         }
       });
-      const val = ((100 - lockedSum) / unlockCount).toFixed(2);
-      let indicesIndex = 0;
-      setSelectedValidors(
-        selectedValidator.map((item, index) => {
-          if (index == indices[indicesIndex]) {
-            indicesIndex++;
-            return { ...item, stakingAllocation: val };
-          } else {
-            return { ...item };
-          }
-        })
-      );
-      const sum = lockedSum + val * unlockCount;
-      setTotalStake(sum);
+      if (unlockCount) {
+        const val = ((100 - lockedSum) / unlockCount).toFixed(2);
+        let indicesIndex = 0;
+        setSelectedValidors(
+          selectedValidator.map((item, index) => {
+            if (index == indices[indicesIndex]) {
+              indicesIndex++;
+              return { ...item, stakingAllocation: val };
+            } else {
+              return { ...item };
+            }
+          })
+        );
+        const sum = lockedSum + val * unlockCount;
+        setTotalStake(sum);
+      }
     }
+  }
+
+  function confirmStaking() {
+    setShowSummaryModal(false);
+    setShowStatusModal(true);
   }
 
   useEffect(() => {
@@ -275,9 +289,14 @@ function Allocate({ setStep }) {
                                 class="form-control set-stake-allocation"
                                 placeholder={item.stakingAllocation || 0.0}
                                 value={item?.stakingAllocation}
-                                disabled={item.isLock}
+                                disabled={item.isLock && autoRegulate}
                                 onChange={(e) => {
                                   console.log(e);
+                                  var t = e.target.value;
+                                  e.target.value =
+                                    t.indexOf(".") >= 0
+                                      ? t.slice(0, t.indexOf(".") + 3)
+                                      : t;
                                   handleChange(
                                     e.target.value,
                                     item.name,
@@ -288,106 +307,110 @@ function Allocate({ setStep }) {
                                   handleBlur(e.target.value, item.name, index);
                                 }}
                               />
-                              {/*Unlock Icon */}
-                              <div
-                                class={`${
-                                  item.isLock
-                                    ? "stake-allocation-percentage__lock"
-                                    : "stake-allocation-percentage__unlock"
-                                } `}
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="bottom"
-                                data-bs-html="true"
-                                title="Lock to set stake allocation."
-                                onClick={() => {
-                                  toggleLock(index);
-                                }}
-                              >
-                                <svg
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <g clipPath="url(#clip0_260_465)">
-                                    <path
-                                      d="M19.5 8.25H4.5C4.08579 8.25 3.75 8.58579 3.75 9V19.5C3.75 19.9142 4.08579 20.25 4.5 20.25H19.5C19.9142 20.25 20.25 19.9142 20.25 19.5V9C20.25 8.58579 19.9142 8.25 19.5 8.25Z"
-                                      fill="#171717"
-                                      stroke="#FF8500"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                    <path
-                                      d="M11.89 15.7801C12.9338 15.7801 13.78 14.9339 13.78 13.89C13.78 12.8462 12.9338 12 11.89 12C10.8462 12 10 12.8462 10 13.89C10 14.9339 10.8462 15.7801 11.89 15.7801Z"
-                                      fill="#FF8500"
-                                    />
-                                    <path
-                                      d="M8.25 8.25V5.25C8.25 4.25544 8.64509 3.30161 9.34835 2.59835C10.0516 1.89509 11.0054 1.5 12 1.5C13.8141 1.5 15.4022 2.78813 15.75 4.5"
-                                      stroke="#FF8500"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0_260_465">
-                                      <rect
-                                        width="24"
-                                        height="24"
-                                        fill="white"
-                                      />
-                                    </clipPath>
-                                  </defs>
-                                </svg>
-                              </div>
-                              {/*Lock Icon */}
-                              <div
-                                class={`${
-                                  item.isLock
-                                    ? "stake-allocation-percentage__unlock"
-                                    : "stake-allocation-percentage__lock"
-                                } `}
-                                onClick={() => {
-                                  toggleLock(index);
-                                }}
-                              >
-                                <svg
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <g clipPath="url(#clip0_90_3157)">
-                                    <path
-                                      d="M19.5 8.25H4.5C4.08579 8.25 3.75 8.58579 3.75 9V19.5C3.75 19.9142 4.08579 20.25 4.5 20.25H19.5C19.9142 20.25 20.25 19.9142 20.25 19.5V9C20.25 8.58579 19.9142 8.25 19.5 8.25Z"
-                                      fill="#FF8500"
-                                      stroke="#FF8500"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                    <path
-                                      d="M11.89 15.7801C12.9338 15.7801 13.78 14.9339 13.78 13.89C13.78 12.8462 12.9338 12 11.89 12C10.8462 12 10 12.8462 10 13.89C10 14.9339 10.8462 15.7801 11.89 15.7801Z"
-                                      fill="#171717"
-                                    />
-                                    <path
-                                      d="M8.25 8.25V5.25C8.25 4.25544 8.64509 3.30161 9.34835 2.59835C10.0516 1.89509 11.0054 1.5 12 1.5C12.9946 1.5 13.9484 1.89509 14.6517 2.59835C15.3549 3.30161 15.75 4.25544 15.75 5.25V8.25"
-                                      stroke="#FF8500"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0_90_3157">
-                                      <rect
-                                        width="24"
-                                        height="24"
-                                        fill="white"
-                                      />
-                                    </clipPath>
-                                  </defs>
-                                </svg>
-                              </div>
+                              {autoRegulate && (
+                                <>
+                                  {/*Unlock Icon */}
+                                  <div
+                                    class={`${
+                                      item.isLock
+                                        ? "stake-allocation-percentage__lock"
+                                        : "stake-allocation-percentage__unlock"
+                                    } `}
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    data-bs-html="true"
+                                    title="Lock to set stake allocation."
+                                    onClick={() => {
+                                      toggleLock(index);
+                                    }}
+                                  >
+                                    <svg
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <g clipPath="url(#clip0_260_465)">
+                                        <path
+                                          d="M19.5 8.25H4.5C4.08579 8.25 3.75 8.58579 3.75 9V19.5C3.75 19.9142 4.08579 20.25 4.5 20.25H19.5C19.9142 20.25 20.25 19.9142 20.25 19.5V9C20.25 8.58579 19.9142 8.25 19.5 8.25Z"
+                                          fill="#171717"
+                                          stroke="#FF8500"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                        <path
+                                          d="M11.89 15.7801C12.9338 15.7801 13.78 14.9339 13.78 13.89C13.78 12.8462 12.9338 12 11.89 12C10.8462 12 10 12.8462 10 13.89C10 14.9339 10.8462 15.7801 11.89 15.7801Z"
+                                          fill="#FF8500"
+                                        />
+                                        <path
+                                          d="M8.25 8.25V5.25C8.25 4.25544 8.64509 3.30161 9.34835 2.59835C10.0516 1.89509 11.0054 1.5 12 1.5C13.8141 1.5 15.4022 2.78813 15.75 4.5"
+                                          stroke="#FF8500"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                      </g>
+                                      <defs>
+                                        <clipPath id="clip0_260_465">
+                                          <rect
+                                            width="24"
+                                            height="24"
+                                            fill="white"
+                                          />
+                                        </clipPath>
+                                      </defs>
+                                    </svg>
+                                  </div>
+                                  {/*Lock Icon */}
+                                  <div
+                                    class={`${
+                                      item.isLock
+                                        ? "stake-allocation-percentage__unlock"
+                                        : "stake-allocation-percentage__lock"
+                                    } `}
+                                    onClick={() => {
+                                      toggleLock(index);
+                                    }}
+                                  >
+                                    <svg
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <g clipPath="url(#clip0_90_3157)">
+                                        <path
+                                          d="M19.5 8.25H4.5C4.08579 8.25 3.75 8.58579 3.75 9V19.5C3.75 19.9142 4.08579 20.25 4.5 20.25H19.5C19.9142 20.25 20.25 19.9142 20.25 19.5V9C20.25 8.58579 19.9142 8.25 19.5 8.25Z"
+                                          fill="#FF8500"
+                                          stroke="#FF8500"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                        <path
+                                          d="M11.89 15.7801C12.9338 15.7801 13.78 14.9339 13.78 13.89C13.78 12.8462 12.9338 12 11.89 12C10.8462 12 10 12.8462 10 13.89C10 14.9339 10.8462 15.7801 11.89 15.7801Z"
+                                          fill="#171717"
+                                        />
+                                        <path
+                                          d="M8.25 8.25V5.25C8.25 4.25544 8.64509 3.30161 9.34835 2.59835C10.0516 1.89509 11.0054 1.5 12 1.5C12.9946 1.5 13.9484 1.89509 14.6517 2.59835C15.3549 3.30161 15.75 4.25544 15.75 5.25V8.25"
+                                          stroke="#FF8500"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                      </g>
+                                      <defs>
+                                        <clipPath id="clip0_90_3157">
+                                          <rect
+                                            width="24"
+                                            height="24"
+                                            fill="white"
+                                          />
+                                        </clipPath>
+                                      </defs>
+                                    </svg>
+                                  </div>
+                                </>
+                              )}
                             </div>
                           </div>
                           {/*Voting Power */}
@@ -574,10 +597,16 @@ function Allocate({ setStep }) {
                   {/*<a href="#" class="btn btn-primary disabled">Next</a> */}
                   <button
                     type="submit"
-                    class={`btn btn-primary ${totalStake > 100 && "disabled"}`}
+                    class={`btn btn-primary ${
+                      (totalStake > 100 && "disabled") ||
+                      (totalStake < 99 && "disabled")
+                    }`}
                     data-bs-toggle="modal"
                     data-bs-target="#modal_stake-summary"
                     role="button"
+                    onClick={() => {
+                      setShowSummaryModal(!showSummaryModal);
+                    }}
                   >
                     Next
                   </button>
@@ -599,6 +628,17 @@ function Allocate({ setStep }) {
         </div>
       </div>
       {/*Stake Allocation [ Fixed ] Ends Here */}
+
+      {showSummaryModal && (
+        <StakingSummary
+          setShowSummaryModal={setShowSummaryModal}
+          selectedValidator={selectedValidator}
+          confirmStaking={confirmStaking}
+        />
+      )}
+      {showStatusModal && (
+        <TransactionStatusModal setShowStatusModal={setShowStatusModal} />
+      )}
     </div>
   );
 }

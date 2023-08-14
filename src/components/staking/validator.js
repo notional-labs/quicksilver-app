@@ -123,10 +123,11 @@ function Validator({ setStep }) {
     }
   }
   function handleRandomizeButtonClick() {
-    let newData = validators
-      .filter((val) => val.status === "BOND_STATUS_BONDED")
-      .map((val) => Object.assign({}, val, { active: false }));
-    setValidators([...newData].sort(() => Math.random() - 0.5));
+    // let newData = validators
+    //   .filter((val) => val.status === "BOND_STATUS_BONDED")
+    //   .map((val) => Object.assign({}, val, { active: false }));
+    // setValidators([...newData].sort(() => Math.random() - 0.5));
+    setValidators([...validators].sort(() => Math.random() - 0.5));
     setSortingField("");
     setSortType("");
   }
@@ -145,7 +146,7 @@ function Validator({ setStep }) {
     setShowInactive(!showInactive);
   }
   function isFavorite(item) {
-    const favorite = JSON.parse(localStorage.getItem("favorite"));
+    const favorite = JSON.parse(localStorage.getItem("favorite")) || [];
     const validator = favorite.find((element) => element.name == item.name);
     if (validator) {
       return true;
@@ -165,20 +166,36 @@ function Validator({ setStep }) {
   }
   useEffect(() => {
     if (searchData) {
-      const tempValidator = JSON.parse(JSON.stringify(validatorList));
+      let tempValidator = [];
+      if (!showInactive) {
+        tempValidator = JSON.parse(JSON.stringify(validatorList));
+        tempValidator = tempValidator.filter(
+          (val) => val.status === "BOND_STATUS_BONDED"
+        );
+      } else {
+        tempValidator = JSON.parse(JSON.stringify(validatorList));
+      }
       const tempValidator2 = tempValidator.filter((item, index) => {
         return item.name.toLowerCase().includes(searchData.toLowerCase());
       });
       setValidators(tempValidator2);
     } else {
-      setValidators(validatorList);
+      if (showInactive) {
+        setValidators(validatorList);
+      } else {
+        let tempValidator = JSON.parse(JSON.stringify(validatorList));
+        tempValidator = tempValidator.filter(
+          (val) => val.status === "BOND_STATUS_BONDED"
+        );
+        setValidators(tempValidator);
+      }
     }
   }, [searchData]);
 
-  // useEffect(() => {
-  //   console.log("favorite validator", favoriteValidator);
-  //   localStorage.setItem("favorite", JSON.stringify(favoriteValidator));
-  // }, [favoriteValidator]);
+  useEffect(() => {
+    handleToggle();
+  }, []);
+
   return (
     <>
       {/* Staking Start here */}
@@ -253,7 +270,13 @@ function Validator({ setStep }) {
                   </div>
                 </div>
                 <div class="col-lg-6">
-                  <div class="staking-flow__body--filters__additional">
+                  <div
+                    class={`staking-flow__body--filters__additional ${
+                      activeSection != "validators"
+                        ? "staking-flow__body--filters__additional-direction"
+                        : ""
+                    }`}
+                  >
                     {/* Checkbox to toggle Inactive/Active Validators */}
                     <div class="show-inactive-validators text-almostwhite">
                       <div class="form-check">
@@ -274,7 +297,9 @@ function Validator({ setStep }) {
                     </div>
                     {/* Randomizer */}
                     <div
-                      class="randomizer"
+                      class={`randomizer ${
+                        activeSection != "validators" ? "hide-randomizer" : ""
+                      }`}
                       onClick={handleRandomizeButtonClick}
                     >
                       <a href="#">
@@ -629,7 +654,7 @@ function Validator({ setStep }) {
                   </div>
                 </div>
               ) : (
-                <Favorite />
+                <Favorite showInactive={showInactive} />
               )}
             </div>
           </div>
@@ -821,8 +846,8 @@ function Validator({ setStep }) {
                   <button
                     type="submit"
                     class={`btn btn-primary ${
-                      !selectedValidator.length && "disabled"
-                    }`}
+                      !selectedValidator.length ? "disabled" : ""
+                    } ${selectedValidator.length > 8 ? "disabled" : ""}`}
                     onClick={() => {
                       setStep(3);
                     }}

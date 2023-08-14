@@ -3009,6 +3009,7 @@ a {
 .modal-body .transection-details__validators-list--head .edit-stake {
   line-height: 1;
   color: #ff8500 !important;
+  cursor: pointer;
 }
 .modal-body .transection-details__validators-list--body ul {
   height: auto;
@@ -3682,6 +3683,9 @@ a {
   margin-left: auto;
   flex-wrap: wrap;
 }
+.staking-flow__body--filters__additional-direction {
+  flex-direction: row-reverse;
+}
 .staking-flow__body--filters__additional .show-inactive-validators {
   flex-grow: 1;
 }
@@ -3746,6 +3750,9 @@ a {
 .staking-flow__body--filters__additional .randomizer {
   min-width: 18px;
   margin-left: 24px;
+}
+.staking-flow__body--filters__additional .hide-randomizer {
+  visibility: hidden;
 }
 .staking-flow__body--filters__additional .randomizer a {
   display: flex;

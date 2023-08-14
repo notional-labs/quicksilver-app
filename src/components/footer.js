@@ -41,7 +41,12 @@ function Footer() {
             <div class="site-footer__socials">
               <ul class="social-icons list-reset">
                 <li>
-                  <a href="#">
+                  <a
+                    href="https://discord.com/invite/xrSmYMDVrQ"
+                    target="_blank"
+                    rel="nofollow noreferrer"
+                    title="Discord"
+                  >
                     <svg
                       width="18"
                       height="18"
@@ -64,7 +69,12 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a
+                    href="https://medium.com/quicksilverzone"
+                    target="_blank"
+                    rel="nofollow noreferrer"
+                    title="Medium"
+                  >
                     <svg
                       width="18"
                       height="18"
@@ -87,7 +97,12 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a
+                    href="https://www.youtube.com/channel/UCFHGQ7SAtIyAlNHewNNVU1A "
+                    target="_blank"
+                    rel="nofollow noopener"
+                    title="Youtube"
+                  >
                     <svg
                       width="18"
                       height="18"
@@ -110,7 +125,12 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a
+                    href="https://t.me/quicksilverzone"
+                    target="_blank"
+                    rel="nofollow noreferrer"
+                    title="Telegram"
+                  >
                     <svg
                       width="18"
                       height="18"
@@ -133,7 +153,12 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a
+                    href="https://twitter.com/quicksilverzone"
+                    target="_blank"
+                    rel="nofollow noreferrer"
+                    title="Twitter"
+                  >
                     <svg
                       width="18"
                       height="18"
@@ -156,7 +181,12 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a
+                    href="https://docs.quicksilver.zone/ "
+                    target="_blank"
+                    rel="nofollow noopener"
+                    title="Quicksilver docs"
+                  >
                     <svg
                       width="18"
                       height="18"

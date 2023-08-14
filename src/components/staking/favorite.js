@@ -6,11 +6,8 @@ import {
 } from "@/slices/validatorList";
 import { useDispatch, useSelector } from "react-redux";
 
-function Favorite() {
+function Favorite({ showInactive }) {
   const dispatch = useDispatch();
-  const validatorList = useSelector(
-    (state) => state.validatorList.validatorList
-  );
   const selectedValidatorList = useSelector(
     (state) => state.validatorList.selectedValidatorList
   );
@@ -24,15 +21,13 @@ function Favorite() {
   const [sortingField, setSortingField] = useState("");
   const [sortType, setSortType] = useState("");
 
-  const [showInactive, setShowInactive] = useState(true);
-
   const [favoriteValidator, setFavoriteValidator] = useState([]);
 
   function handleSorting(item, key) {
     if (sortingField == item) {
       if (sortType == "asc") {
         setSortType("dec");
-        const tempValidator = localFavorites;
+        const tempValidator = favoriteValidator;
         tempValidator.sort((a, b) =>
           Number(a[key]) > Number(b[key])
             ? -1
@@ -44,13 +39,11 @@ function Favorite() {
       } else if (sortType == "dec") {
         setSortType("");
         setSortingField("");
-        if (showInactive) {
-          setFavoriteValidator(localFavorites);
-        }
+        setFavoriteValidator(favoriteValidator);
       } else {
         setSortType("asc");
         setSortingField(item);
-        const tempValidator = localFavorites;
+        const tempValidator = favoriteValidator;
         tempValidator.sort((a, b) =>
           Number(a[key]) > Number(b[key])
             ? 1
@@ -63,7 +56,7 @@ function Favorite() {
     } else {
       setSortingField(item);
       setSortType("asc");
-      const tempValidator = localFavorites;
+      const tempValidator = favoriteValidator;
       tempValidator.sort((a, b) =>
         Number(a[key]) > Number(b[key])
           ? 1
@@ -96,27 +89,6 @@ function Favorite() {
     );
     localStorage.setItem("favorite", JSON.stringify(updateFavoriteValidator));
   }
-  //   function handleRandomizeButtonClick() {
-  //     let newData = validators
-  //       .filter((val) => val.status === "BOND_STATUS_BONDED")
-  //       .map((val) => Object.assign({}, val, { active: false }));
-  //     setValidators([...newData].sort(() => Math.random() - 0.5));
-  //     setSortingField("");
-  //     setSortType("");
-  //   }
-  //   function handleToggle() {
-  //     const value = !showInactive;
-  //     const tempValidator = JSON.parse(JSON.stringify(validatorList));
-  //     if (value === true) {
-  //       let newData = tempValidator
-  //       setValidators(newData);
-  //     } else if (value === false) {
-  //       let newData = tempValidator
-  //         .filter((val) => val.status === "BOND_STATUS_BONDED")
-  //       setValidators(newData);
-  //     }
-  //     setShowInactive(!showInactive);
-  //   }
   function isValidatorSelected(item) {
     const validator = selectedValidatorList.find(
       (element) => element.name == item.name
@@ -129,20 +101,35 @@ function Favorite() {
   }
   useEffect(() => {
     if (searchData) {
-      const tempValidator2 = JSON.parse(
-        localStorage.getItem("favorite")
-      ).filter((item, index) => {
+      const tempValidator2 = favoriteValidator.filter((item, index) => {
         return item.name.toLowerCase().includes(searchData.toLowerCase());
       });
       setFavoriteValidator(tempValidator2);
     } else {
-      setFavoriteValidator(JSON.parse(localStorage.getItem("favorite")));
+      if (!showInactive) {
+        const tempValidator =
+          JSON.parse(localStorage.getItem("favorite")) || [];
+        setFavoriteValidator(
+          tempValidator.filter((val) => val.status === "BOND_STATUS_BONDED")
+        );
+      } else {
+        setFavoriteValidator(
+          JSON.parse(localStorage.getItem("favorite")) || []
+        );
+      }
     }
   }, [searchData]);
 
   useEffect(() => {
-    setFavoriteValidator(JSON.parse(localStorage.getItem("favorite")));
-  }, []);
+    if (!showInactive) {
+      const tempValidator = JSON.parse(localStorage.getItem("favorite")) || [];
+      setFavoriteValidator(
+        tempValidator.filter((val) => val.status === "BOND_STATUS_BONDED")
+      );
+    } else {
+      setFavoriteValidator(JSON.parse(localStorage.getItem("favorite")) || []);
+    }
+  }, [showInactive]);
   return (
     <>
       <div
