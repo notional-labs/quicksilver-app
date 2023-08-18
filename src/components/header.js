@@ -1,12 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { logo, keplr, atom } from "../assets/img/index";
 import { WalletSection } from "@/provider/wallet";
 import SwitchNetwork from "./switchNetwork";
+import { useDispatch } from "react-redux";
+import { fetchNetworks } from "@/slices/networks";
 
 function Header() {
+  const dispatch = useDispatch();
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchNetworks());
+  }, []);
   return (
     <header class="site-header">
       <nav class="navbar navbar-expand-lg">

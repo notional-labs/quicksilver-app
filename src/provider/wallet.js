@@ -3,14 +3,17 @@ import { useManager } from "@cosmos-kit/react";
 import { Center } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { ConnectWalletButton } from "./wallet-connect";
-import { ChainName } from "@cosmos-kit/core";
 import { WalletCardSection } from "./card";
 import SwitchNetwork from "@/components/switchNetwork";
+import { networksSelector } from "@/slices/networks";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedNetworkFunc } from "@/slices/selectedNetworks";
 
 export const WalletSection = () => {
+  const networks = useSelector(networksSelector);
+  const dispatch = useDispatch();
   const [chainName, setChainName] = useState("elgafar-1");
   const { chainRecords, getChainLogo } = useManager();
-  console.log("Checking", chainRecords);
   const chainOptions = useMemo(
     () =>
       chainRecords.map((chainRecord) => {
@@ -20,22 +23,29 @@ export const WalletSection = () => {
           value: chainRecord?.name,
           icon: getChainLogo(chainRecord.name),
           status: chainRecord.chain.status,
+          id: chainRecord.chain.chain_id,
         };
       }),
     [chainRecords, getChainLogo]
   );
 
   useEffect(() => {
-    setChainName(window.localStorage.getItem("selected-chain") || "elgafar-1");
-  }, []);
+    setChainName(localStorage.getItem("selected-chain") || "elgafar-1");
+  }, [chainName]);
 
   const onChainChange = async (selectedValue, closeModal) => {
     setChainName(selectedValue?.chainName);
-    if (selectedValue?.chainName) {
-      window?.localStorage.setItem("selected-chain", selectedValue?.chainName);
+    if (selectedValue?.id) {
+      window?.localStorage.setItem("selected-chain", selectedValue?.id);
     } else {
       window?.localStorage.removeItem("selected-chain");
     }
+    const networkList = networks.networks || [];
+    console.log("Check this", networks, selectedValue);
+    const selectedNetwork = networkList.find(
+      (item) => item.value.chain_id == selectedValue.id
+    );
+    dispatch(setSelectedNetworkFunc(selectedNetwork));
     closeModal();
   };
 

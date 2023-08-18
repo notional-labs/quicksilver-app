@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import StakingSummary from "./stakingSummaryModal";
 import TransactionStatusModal from "./transactionStatusModal";
 
-function Allocate({ setStep }) {
+function Allocate({ setStep, stakingAmount }) {
   const selectedValidatorList = useSelector(
     (state) => state.validatorList.selectedValidatorList
   );
@@ -484,7 +484,7 @@ function Allocate({ setStep }) {
                     <div class="network">
                       <div class="network__inner text-lightgray">
                         <h5 class="font-demi">
-                          <span>1O.123123</span>&nbsp; ATOM
+                          <span>{stakingAmount}</span>&nbsp; ATOM
                           <a
                             href="#"
                             data-bs-toggle="modal"

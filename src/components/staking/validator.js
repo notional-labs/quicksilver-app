@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Favorite from "./favorite";
 
-function Validator({ setStep }) {
+function Validator({ setStep, stakingAmount }) {
   const dispatch = useDispatch();
   const validatorList = useSelector(
     (state) => state.validatorList.validatorList
@@ -270,13 +270,7 @@ function Validator({ setStep }) {
                   </div>
                 </div>
                 <div class="col-lg-6">
-                  <div
-                    class={`staking-flow__body--filters__additional ${
-                      activeSection != "validators"
-                        ? "staking-flow__body--filters__additional-direction"
-                        : ""
-                    }`}
-                  >
+                  <div class={`staking-flow__body--filters__additional`}>
                     {/* Checkbox to toggle Inactive/Active Validators */}
                     <div class="show-inactive-validators text-almostwhite">
                       <div class="form-check">
@@ -674,7 +668,7 @@ function Validator({ setStep }) {
                     <div class="network">
                       <div class="network__inner text-lightgray">
                         <h5 class="font-demi">
-                          <span>1O.123123</span>&nbsp; ATOM
+                          <span>{stakingAmount}</span>&nbsp; ATOM
                           <a href="#">
                             <svg
                               width="20"

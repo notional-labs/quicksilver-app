@@ -3682,9 +3682,8 @@ a {
   width: fit-content;
   margin-left: auto;
   flex-wrap: wrap;
-}
-.staking-flow__body--filters__additional-direction {
   flex-direction: row-reverse;
+  gap: 24px;
 }
 .staking-flow__body--filters__additional .show-inactive-validators {
   flex-grow: 1;
@@ -3749,7 +3748,6 @@ a {
 }
 .staking-flow__body--filters__additional .randomizer {
   min-width: 18px;
-  margin-left: 24px;
 }
 .staking-flow__body--filters__additional .hide-randomizer {
   visibility: hidden;

@@ -7,7 +7,6 @@ import {
   favicon,
   kaplrCircle,
   leap,
-  cosmos,
   osmosis,
   regen,
   stargaze1,
@@ -24,118 +23,218 @@ import {
 } from "@image/index";
 import Validator from "@/components/staking/validator";
 import Allocate from "@/components/staking/allocate";
-import { useChain } from "@cosmos-kit/react";
+import { useChain, useWallet, useWalletClient } from "@cosmos-kit/react";
 import { useDispatch, useSelector } from "react-redux";
 import { _loadValsAsync, validatorListSelector } from "@/slices/validatorList";
+import { assets } from "chain-registry";
+import { cosmos } from "juno-network";
+import { selectedNetworkSelector } from "@/slices/selectedNetworks";
 
 function Staking() {
   const dispatch = useDispatch();
+  let selectedNetwork = useSelector(selectedNetworkSelector);
+  selectedNetwork = selectedNetwork.selectedNetwork.value;
+  console.log("selected network 2", selectedNetwork);
   const [step, setStep] = useState(1);
+  const [stakingAmount, setStakingAmount] = useState();
+  // const [validators, setValidators] = useState([
+  //   {
+  //     img: lavender,
+  //     name: "Lavender.Five Nodes",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: true,
+  //   },
+  //   {
+  //     img: kraken,
+  //     name: "Kraten",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  //   {
+  //     img: stir,
+  //     name: "Stir",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  //   {
+  //     img: terravegas,
+  //     name: "TerraVegas",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  //   {
+  //     img: sanka,
+  //     name: "Sanka Networks",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  //   {
+  //     img: smartnodes,
+  //     name: "SmartNodes",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  //   {
+  //     img: fishking,
+  //     name: "FishKing",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  //   {
+  //     img: aurastake,
+  //     name: "AuraStake",
+  //     votingPower: "12,793,452",
+  //     votingPowerDiff: "6.18%",
+  //     commission: "22.35%",
+  //     votingRecord: "12/65",
+  //     PRScore: "LEVEL 01",
+  //     isSelected: false,
+  //     isLock: false,
+  //   },
+  // ]);
+  // const [selectedValidator, setSelectedValidors] = useState();
 
-  const [validators, setValidators] = useState([
-    {
-      img: lavender,
-      name: "Lavender.Five Nodes",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: true,
-    },
-    {
-      img: kraken,
-      name: "Kraten",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-    {
-      img: stir,
-      name: "Stir",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-    {
-      img: terravegas,
-      name: "TerraVegas",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-    {
-      img: sanka,
-      name: "Sanka Networks",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-    {
-      img: smartnodes,
-      name: "SmartNodes",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-    {
-      img: fishking,
-      name: "FishKing",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-    {
-      img: aurastake,
-      name: "AuraStake",
-      votingPower: "12,793,452",
-      votingPowerDiff: "6.18%",
-      commission: "22.35%",
-      votingRecord: "12/65",
-      PRScore: "LEVEL 01",
-      isSelected: false,
-      isLock: false,
-    },
-  ]);
-  const [selectedValidator, setSelectedValidors] = useState();
+  const localChain = localStorage.getItem("selected-chain");
+  console.log("Here", localChain);
+  const { isWalletConnected, chain, address, openView, getRpcEndpoint } =
+    useChain(localChain || "elgafar-1");
+  const walletData = localStorage.getItem("cosmos-kit@1:core//current-wallet");
+  const { mainWallet, chainWallets, wallet, status, message } =
+    useWallet(walletData);
+  console.log("isWalletconnected", isWalletConnected, chain, address);
+  console.log(
+    "Yesssssssssss",
+    mainWallet,
+    chainWallets,
+    wallet,
+    status,
+    message,
+    walletData
+  );
 
-  // const localChain = window.localStorage.getItem("selected-chain");
-  const { isWalletConnected, chain, openView } = useChain("elgafar-1");
-  console.log("isWalletconnected", isWalletConnected, chain);
+  //////////////////////////////////////////
+
+  const chainName = localChain || "elgafar-1";
+  // const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  // const coin = chainassets.assets.find((asset) => asset.base === "uatom");
+  const coin = chain.staking.staking_tokens[0] || {};
+
+  const { client } = useWalletClient();
+  console.log("Client", client);
+  const [balance, setBalance] = useState(0);
+  const [isFetchingBalance, setFetchingBalance] = useState(false);
+  const [resp, setResp] = useState("");
+  const getBalance = async () => {
+    if (!address) {
+      setBalance(0);
+      setFetchingBalance(false);
+      return;
+    }
+
+    let rpcEndpoint = await getRpcEndpoint();
+
+    console.log("rpc", rpcEndpoint);
+
+    if (!rpcEndpoint) {
+      console.info("no rpc endpoint — using a fallback");
+      rpcEndpoint = `https://rpc.cosmos.directory/${chainName}`;
+    }
+
+    // get RPC client
+    const client = await cosmos.ClientFactory.createRPCQueryClient({
+      rpcEndpoint:
+        typeof rpcEndpoint === "string" ? rpcEndpoint : rpcEndpoint.url,
+    });
+    // fetch balance
+    const balance = await client.cosmos.bank.v1beta1.balance({
+      address,
+      // denom: "uatom",
+      denom: coin.minimal_denom,
+    });
+    const balance2 = await client.cosmos.bank.v1beta1.allBalances({
+      address,
+    });
+    console.log("balance", balance, balance2);
+
+    const exp = coin.decimals;
+    const a = balance.balance?.amount || 0;
+    const amount = a * Math.pow(10, -exp);
+    console.log("here we get the value", a, exp, amount);
+    setBalance(amount);
+    setFetchingBalance(false);
+
+    // Get the display exponent
+    // we can get the exponent from chain registry asset denom_units
+    // const exp = coin.denom_units.find(
+    //   (unit) => unit.denom === coin.display
+    // )?.exponent;
+
+    // show balance in display values by exponentiating it
+    // const a = balance.balance?.amount || 0;
+    // const amount = a.multipliedBy(10 ** -exp);
+    // setBalance(amount);
+    // setFetchingBalance(false);
+  };
+
+  //////////////////////////////////////
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [step]);
 
   useEffect(() => {
     if (isWalletConnected) {
+      console.log("11111111", chain);
       dispatch(_loadValsAsync(chain.chain_id));
+      getBalance();
     }
   }, [isWalletConnected]);
+
+  // async function callApi() {
+  //   const val = await fetch(
+  //     `https://lcd.theta-testnet-001.dev.quicksilver.zone/cosmos/bank/v1beta1/balances/${address}/by_denom?denom=uatom`
+  //   );
+  //   const val2 = await val.json();
+  //   console.log("Here", val2);
+  // }
+  // useEffect(() => {
+  //   callApi();
+  // }, []);
   return (
     <>
       {step == 1 ? (
@@ -155,7 +254,13 @@ function Staking() {
                         <Image src={atom} alt="atom" />
                       </div>
                     </div>
-                    <h5 class="font-demi">ATOM</h5>
+                    <h5 class="font-demi">
+                      {selectedNetwork ? (
+                        <>{selectedNetwork.base_denom.slice(1).toUpperCase()}</>
+                      ) : (
+                        "ATOM"
+                      )}
+                    </h5>
                   </div>
                   <div class="network__stats text-end">
                     <h5 class="font-demi mb-2 text-lightgray">~26.82%</h5>
@@ -308,20 +413,38 @@ function Staking() {
                             type="number"
                             class="input-lg"
                             placeholder="0.00"
+                            value={stakingAmount}
+                            onChange={(e) => {
+                              setStakingAmount(e.target.value);
+                            }}
                           />
                           <p>$0.00</p>
                         </div>
                       </div>
                       <div class="staking_tab--amount__balance mt-2">
-                        <p class="copy-sm text-uppercase">BALANCE: 0.00 ATOM</p>
+                        <p class="copy-sm text-uppercase">
+                          BALANCE: {balance.toFixed(2)} ATOM
+                        </p>
                         <ul class="list-reset staking_tab--amount__balance--options">
                           <li>
-                            <button class="tag" type="button">
+                            <button
+                              class="tag"
+                              type="button"
+                              onClick={() => {
+                                setStakingAmount((balance / 2).toFixed(2));
+                              }}
+                            >
                               Half
                             </button>
                           </li>
                           <li>
-                            <button class="tag" type="button">
+                            <button
+                              class="tag"
+                              type="button"
+                              onClick={() => {
+                                setStakingAmount(balance.toFixed(2));
+                              }}
+                            >
                               Max
                             </button>
                           </li>
@@ -363,7 +486,16 @@ function Staking() {
                             Transaction Cost
                           </span>
                           <p class="copy-normal font-medium text-lightgray ms-auto">
-                            <span>14,103.281212</span> ATOM
+                            <span>14,103.281212</span>{" "}
+                            {selectedNetwork ? (
+                              <>
+                                {selectedNetwork.base_denom
+                                  .slice(1)
+                                  .toUpperCase()}
+                              </>
+                            ) : (
+                              "ATOM"
+                            )}
                           </p>
                         </li>
                         <li>
@@ -377,7 +509,26 @@ function Staking() {
                             Redemption rate
                           </span>
                           <p class="copy-normal font-medium text-lightgray ms-auto">
-                            <span>1 ATOM = 1.243222</span> qATOM
+                            {selectedNetwork ? (
+                              <span>
+                                1{" "}
+                                {selectedNetwork.base_denom
+                                  .slice(1)
+                                  .toUpperCase()}{" "}
+                                ={" "}
+                                {parseFloat(
+                                  1 / selectedNetwork?.redemption_rate
+                                ).toFixed(4)}{" "}
+                                {selectedNetwork.local_denom[1] +
+                                  selectedNetwork.local_denom
+                                    .slice(2)
+                                    .toUpperCase()}{" "}
+                              </span>
+                            ) : (
+                              <>
+                                <span>1 ATOM = 1.243222</span> qATOM
+                              </>
+                            )}
                           </p>
                         </li>
                         <li>
@@ -419,10 +570,14 @@ function Staking() {
                     <div class="staking_tab--btn mt-4">
                       {isWalletConnected ? (
                         <button
-                          class="btn btn-primary w-100"
+                          class={`btn btn-primary w-100 ${
+                            (balance < stakingAmount && "disabled") ||
+                            (!stakingAmount && "disabled")
+                          } `}
                           data-bs-toggle="modal"
                           data-bs-target="#modal_connect-wallet"
                           role="button"
+                          disabled={balance < stakingAmount}
                           onClick={() => {
                             setStep(2);
                           }}
@@ -572,21 +727,9 @@ function Staking() {
           {/* Staking Ends here  */}
         </>
       ) : step == 2 ? (
-        <Validator
-          setStep={setStep}
-          validators={validators}
-          setValidators={setValidators}
-          setSelectedValidors={setSelectedValidors}
-          selectedValidator={selectedValidator}
-        />
+        <Validator setStep={setStep} stakingAmount={stakingAmount} />
       ) : (
-        <Allocate
-          setStep={setStep}
-          validators={validators}
-          setValidators={setValidators}
-          setSelectedValidors={setSelectedValidors}
-          selectedValidator={selectedValidator}
-        />
+        <Allocate setStep={setStep} stakingAmount={stakingAmount} />
       )}
     </>
   );
