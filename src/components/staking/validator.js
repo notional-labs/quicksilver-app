@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Favorite from "./favorite";
 
-function Validator({ setStep, stakingAmount }) {
+function Validator({ setStep, stakingAmount, coin }) {
   const dispatch = useDispatch();
   const validatorList = useSelector(
     (state) => state.validatorList.validatorList
@@ -668,7 +668,7 @@ function Validator({ setStep, stakingAmount }) {
                     <div class="network">
                       <div class="network__inner text-lightgray">
                         <h5 class="font-demi">
-                          <span>{stakingAmount}</span>&nbsp; ATOM
+                          <span>{stakingAmount}</span>&nbsp; {coin.denom}
                           <a href="#">
                             <svg
                               width="20"

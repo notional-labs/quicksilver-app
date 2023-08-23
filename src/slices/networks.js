@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { osmosis, cosmos, stargaze, junoPng, regen } from "@/assets/img";
+import { setSelectedNetworkFunc } from "./selectedNetworks";
 
 export const initialState = {
   loading: false,
@@ -50,6 +51,11 @@ export function fetchNetworks() {
       console.log("here is the data", combinedData);
       let zones = manipulateData(combinedData);
       console.log("Zones related data", zones);
+      const chain = localStorage.getItem("selected-chain") || "elgafar-1";
+      const selectedNetwork = zones.find(
+        (item) => item.value.chain_id == chain
+      );
+      dispatch(setSelectedNetworkFunc(selectedNetwork));
       //   const APR = await fetch("https://data.quicksilver.zone/apr");
       //   const APRDATa = await APR.json();
       //   let APY = APRDATa.chains;

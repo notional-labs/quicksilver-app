@@ -33,7 +33,9 @@ import { selectedNetworkSelector } from "@/slices/selectedNetworks";
 function Staking() {
   const dispatch = useDispatch();
   let selectedNetwork = useSelector(selectedNetworkSelector);
-  selectedNetwork = selectedNetwork.selectedNetwork.value;
+  console.log("selected network 1", selectedNetwork);
+  selectedNetwork =
+    selectedNetwork?.selectedNetwork?.value || selectedNetwork.selectedNetwork;
   console.log("selected network 2", selectedNetwork);
   const [step, setStep] = useState(1);
   const [stakingAmount, setStakingAmount] = useState();
@@ -255,7 +257,8 @@ function Staking() {
                       </div>
                     </div>
                     <h5 class="font-demi">
-                      {selectedNetwork ? (
+                      {selectedNetwork &&
+                      selectedNetwork != "Select a network" ? (
                         <>{selectedNetwork.base_denom.slice(1).toUpperCase()}</>
                       ) : (
                         "ATOM"
@@ -406,7 +409,18 @@ function Staking() {
                               <Image src={atom} alt="atom" />
                             </div>
                           </div>
-                          <h6 class="font-medium">ATOM</h6>
+                          <h6 class="font-medium">
+                            {selectedNetwork &&
+                            selectedNetwork != "Select a network" ? (
+                              <>
+                                {selectedNetwork.base_denom
+                                  .slice(1)
+                                  .toUpperCase()}
+                              </>
+                            ) : (
+                              <>ATOM</>
+                            )}
+                          </h6>
                         </div>
                         <div class="network__stats text-end">
                           <input
@@ -423,7 +437,17 @@ function Staking() {
                       </div>
                       <div class="staking_tab--amount__balance mt-2">
                         <p class="copy-sm text-uppercase">
-                          BALANCE: {balance.toFixed(2)} ATOM
+                          BALANCE: {balance.toFixed(2)}{" "}
+                          {selectedNetwork &&
+                          selectedNetwork != "Select a network" ? (
+                            <>
+                              {selectedNetwork.base_denom
+                                .slice(1)
+                                .toUpperCase()}
+                            </>
+                          ) : (
+                            <>ATOM</>
+                          )}
                         </p>
                         <ul class="list-reset staking_tab--amount__balance--options">
                           <li>
@@ -460,7 +484,19 @@ function Staking() {
                               <Image src={qAtom} alt="qAtom" />
                             </div>
                           </div>
-                          <h6 class="font-medium">qATOM</h6>
+                          <h6 class="font-medium">
+                            {selectedNetwork &&
+                            selectedNetwork != "Select a network" ? (
+                              <>
+                                {selectedNetwork.local_denom[1] +
+                                  selectedNetwork.local_denom
+                                    .slice(2)
+                                    .toUpperCase()}
+                              </>
+                            ) : (
+                              <>qATOM</>
+                            )}
+                          </h6>
                         </div>
                         <div class="network__stats text-end">
                           <h5 class="font-normal">0.00</h5>
@@ -469,7 +505,18 @@ function Staking() {
                       </div>
                       <div class="staking_tab--amount__balance mt-2">
                         <p class="copy-sm text-uppercase">
-                          BALANCE: 0.00 qATOM
+                          BALANCE: 0.00{" "}
+                          {selectedNetwork &&
+                          selectedNetwork != "Select a network" ? (
+                            <>
+                              {selectedNetwork.local_denom[1] +
+                                selectedNetwork.local_denom
+                                  .slice(2)
+                                  .toUpperCase()}
+                            </>
+                          ) : (
+                            <>qATOM</>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -487,7 +534,8 @@ function Staking() {
                           </span>
                           <p class="copy-normal font-medium text-lightgray ms-auto">
                             <span>14,103.281212</span>{" "}
-                            {selectedNetwork ? (
+                            {selectedNetwork &&
+                            selectedNetwork != "Select a network" ? (
                               <>
                                 {selectedNetwork.base_denom
                                   .slice(1)
@@ -509,7 +557,8 @@ function Staking() {
                             Redemption rate
                           </span>
                           <p class="copy-normal font-medium text-lightgray ms-auto">
-                            {selectedNetwork ? (
+                            {selectedNetwork &&
+                            selectedNetwork != "Select a network" ? (
                               <span>
                                 1{" "}
                                 {selectedNetwork.base_denom
@@ -541,9 +590,18 @@ function Staking() {
                           >
                             Unbonding Period
                           </span>
-                          <p class="copy-normal font-medium text-lightgray ms-auto">
-                            7 days
-                          </p>
+                          {selectedNetwork &&
+                          selectedNetwork != "Select a network" ? (
+                            <p class="copy-normal font-medium text-lightgray ms-auto">
+                              {selectedNetwork.unbonding_period /
+                                (8.64 * Math.pow(10, 13))}{" "}
+                              days
+                            </p>
+                          ) : (
+                            <p class="copy-normal font-medium text-lightgray ms-auto">
+                              7 days
+                            </p>
+                          )}
                         </li>
                       </ul>
                     </div>
@@ -727,9 +785,13 @@ function Staking() {
           {/* Staking Ends here  */}
         </>
       ) : step == 2 ? (
-        <Validator setStep={setStep} stakingAmount={stakingAmount} />
+        <Validator
+          setStep={setStep}
+          stakingAmount={stakingAmount}
+          coin={coin}
+        />
       ) : (
-        <Allocate setStep={setStep} stakingAmount={stakingAmount} />
+        <Allocate setStep={setStep} stakingAmount={stakingAmount} coin={coin} />
       )}
     </>
   );

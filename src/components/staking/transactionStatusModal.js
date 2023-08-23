@@ -2,14 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { favicon } from "@/assets/img";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { selectedNetworkSelector } from "@/slices/selectedNetworks";
 
-function TransactionStatusModal({ setShowStatusModal }) {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, [3000]);
-  }, []);
+function TransactionStatusModal({
+  setShowStatusModal,
+  stakingAmount,
+  isLoading,
+  error,
+  isSuccess,
+}) {
+  let selectedNetwork = useSelector(selectedNetworkSelector);
+  selectedNetwork = selectedNetwork?.selectedNetwork?.value || {};
+
   return (
     <div
       class="modal modal__approve-transection fade show"
@@ -54,13 +59,21 @@ function TransactionStatusModal({ setShowStatusModal }) {
                 class="h6-lg font-bold text-lightgray heading"
                 data-heading="Transaction Successful"
               >
-                Approve Transaction
+                {isLoading
+                  ? "Approve Transaction"
+                  : isSuccess
+                  ? "Stake Transaction Successful"
+                  : "Stake Transaction Failed"}
               </h6>
             </div>
             <div class="modal-description d-none d-md-block">
               {/* data-description include the after approval description text */}
               <p class="description" data-description="Transaction successful">
-                Approve the transaction in your wallet.
+                {isLoading
+                  ? "Approve the transaction in your wallet."
+                  : isSuccess
+                  ? "Transaction Successful"
+                  : "Transaction Failed"}
               </p>
             </div>
             <button
@@ -82,7 +95,12 @@ function TransactionStatusModal({ setShowStatusModal }) {
                       Total Stake:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>1O.123123</span> ATOM
+                      <span>{stakingAmount}</span>{" "}
+                      {selectedNetwork ? (
+                        <>{selectedNetwork.base_denom.slice(1).toUpperCase()}</>
+                      ) : (
+                        <>ATOM</>
+                      )}
                     </p>
                   </li>
                   <li>
@@ -98,15 +116,56 @@ function TransactionStatusModal({ setShowStatusModal }) {
                       Redemption Rate:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>1</span> ATOM = <span>1.234322</span> qATOM
+                      {selectedNetwork ? (
+                        <span>
+                          1 {selectedNetwork.base_denom.slice(1).toUpperCase()}{" "}
+                          ={" "}
+                          {parseFloat(
+                            1 / selectedNetwork?.redemption_rate
+                          ).toFixed(4)}{" "}
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom
+                              .slice(2)
+                              .toUpperCase()}{" "}
+                        </span>
+                      ) : (
+                        <>
+                          <span>1 ATOM = 1.243222</span> qATOM
+                        </>
+                      )}
                     </p>
                   </li>
                   <li>
                     <h6 class="copy-sm font-normal text-almostwhite">
-                      qATOM Received
+                      {selectedNetwork ? (
+                        <>
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom
+                              .slice(2)
+                              .toUpperCase()}{" "}
+                          Received
+                        </>
+                      ) : (
+                        <>qATOM Received</>
+                      )}
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>11.123123</span> qATOM
+                      {selectedNetwork ? (
+                        <>
+                          <span>
+                            {(
+                              (1 / Number(selectedNetwork?.redemption_rate)) *
+                              stakingAmount
+                            ).toFixed(6)}
+                          </span>{" "}
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom.slice(2).toUpperCase()}
+                        </>
+                      ) : (
+                        <>
+                          <span>11.123123</span> qATOM
+                        </>
+                      )}
                     </p>
                   </li>
                 </ul>
@@ -140,7 +199,11 @@ function TransactionStatusModal({ setShowStatusModal }) {
                     class="heading copy-normal font-bold text-lightgray"
                     data-heading="Transaction Successful"
                   >
-                    Approving Transaction
+                    {isLoading
+                      ? "Approving Transaction"
+                      : isSuccess
+                      ? "Transaction Successful"
+                      : "Transaction Failed"}
                   </h6>
                   {/* data-description include the after approval description text */}
                   <p
@@ -148,37 +211,42 @@ function TransactionStatusModal({ setShowStatusModal }) {
                     data-description="The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. 
                   This dialogue will auto-refresh."
                   >
-                    Please wait until your transaction is confirmed on the
-                    blockchain.
+                    {isLoading
+                      ? "Please wait until your transaction is confirmed on the blockchain."
+                      : isSuccess
+                      ? "The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh."
+                      : error}
                   </p>
-                  <span class="transaction-hash copy-v-sm text-almostwhite text-gray mt-3">
-                    Transaction Hash: &nbsp;
-                    <a href="#" class="text-blue">
-                      <span>7C543C4...2F31</span>
-                      <svg
-                        width="15"
-                        height="14"
-                        viewBox="0 0 15 14"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M4.29562 9.91634L10.2518 4.08301"
-                          stroke="#3E73F0"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M4.29562 4.08301H10.2518V9.91634"
-                          stroke="#3E73F0"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </a>
-                  </span>
+                  {!isLoading && (
+                    <span class="transaction-hash copy-v-sm text-almostwhite text-gray mt-3">
+                      Transaction Hash: &nbsp;
+                      <a href="#" class="text-blue">
+                        <span>7C543C4...2F31</span>
+                        <svg
+                          width="15"
+                          height="14"
+                          viewBox="0 0 15 14"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.29562 9.91634L10.2518 4.08301"
+                            stroke="#3E73F0"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M4.29562 4.08301H10.2518V9.91634"
+                            stroke="#3E73F0"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </a>
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,12 +1,19 @@
 import React from "react";
 import { favicon } from "@/assets/img";
 import Image from "next/image";
+import { selectedNetworkSelector } from "@/slices/selectedNetworks";
+import { useSelector } from "react-redux";
 
 function StakingSummary({
   setShowSummaryModal,
   selectedValidator,
   confirmStaking,
+  coin,
+  stakingAmount,
 }) {
+  let selectedNetwork = useSelector(selectedNetworkSelector);
+  selectedNetwork =
+    selectedNetwork?.selectedNetwork?.value || selectedNetwork.selectedNetwork;
   return (
     <div
       class="modal modal__stake-summary fade show"
@@ -59,7 +66,13 @@ function StakingSummary({
                       Total Stake:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>1O.123123</span> ATOM
+                      <span>{stakingAmount}</span>{" "}
+                      {selectedNetwork &&
+                      selectedNetwork != "Select a network" ? (
+                        <>{selectedNetwork.base_denom.slice(1).toUpperCase()}</>
+                      ) : (
+                        <>ATOM</>
+                      )}
                     </p>
                   </li>
                   <li>
@@ -75,15 +88,59 @@ function StakingSummary({
                       Redemption Rate:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>1</span> ATOM = <span>1.234322</span> qATOM
+                      {selectedNetwork &&
+                      selectedNetwork != "Select a network" ? (
+                        <span>
+                          1 {selectedNetwork.base_denom.slice(1).toUpperCase()}{" "}
+                          ={" "}
+                          {parseFloat(
+                            1 / selectedNetwork?.redemption_rate
+                          ).toFixed(4)}{" "}
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom
+                              .slice(2)
+                              .toUpperCase()}{" "}
+                        </span>
+                      ) : (
+                        <>
+                          <span>1 ATOM = 1.243222</span> qATOM
+                        </>
+                      )}
                     </p>
                   </li>
                   <li>
                     <h6 class="copy-sm font-normal text-almostwhite">
-                      qATOM Received
+                      {selectedNetwork &&
+                      selectedNetwork != "Select a network" ? (
+                        <>
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom
+                              .slice(2)
+                              .toUpperCase()}{" "}
+                          Received
+                        </>
+                      ) : (
+                        <>qATOM Received</>
+                      )}
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>11.123123</span> qATOM
+                      {selectedNetwork &&
+                      selectedNetwork != "Select a network" ? (
+                        <>
+                          <span>
+                            {(
+                              (1 / Number(selectedNetwork?.redemption_rate)) *
+                              stakingAmount
+                            ).toFixed(6)}
+                          </span>{" "}
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom.slice(2).toUpperCase()}
+                        </>
+                      ) : (
+                        <>
+                          <span>11.123123</span> qATOM
+                        </>
+                      )}
                     </p>
                   </li>
                 </ul>

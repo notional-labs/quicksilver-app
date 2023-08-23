@@ -3,14 +3,87 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import StakingSummary from "./stakingSummaryModal";
 import TransactionStatusModal from "./transactionStatusModal";
+import { SigningStargateClient } from "@cosmjs/stargate";
+import { useChain, useWalletClient } from "@cosmos-kit/react";
+import { cosmos } from "juno-network";
+import { selectedNetworkSelector } from "@/slices/selectedNetworks";
+let { bech32 } = require("bech32");
 
-function Allocate({ setStep, stakingAmount }) {
+function Allocate({ setStep, stakingAmount, coin }) {
   const selectedValidatorList = useSelector(
     (state) => state.validatorList.selectedValidatorList
   );
+
   const votingPowerSum = useSelector(
     (state) => state.validatorList.votingPowerSum
   );
+
+  let selectedNetwork = useSelector(selectedNetworkSelector);
+  selectedNetwork = selectedNetwork?.selectedNetwork?.value || {};
+
+  const chainName =
+    localStorage.getItem("selected-chain") || "theta-testnet-001";
+
+  const { getSigningStargateClient, address, status, getRpcEndpoint } =
+    useChain(chainName);
+
+  const sendTokens = (getSigningStargateClient, address) => {
+    return async () => {
+      const stargateClient = await getSigningStargateClient();
+      if (!stargateClient || !address) {
+        console.error("stargateClient undefined or address undefined.");
+        return;
+      }
+
+      const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
+
+      const msg = send({
+        amount: [
+          {
+            denom: coin?.minimal_denom,
+            amount: String(stakingAmount * Math.pow(10, 6)),
+          },
+        ],
+        fromAddress: address,
+        toAddress: selectedNetwork
+          ? selectedNetwork.deposit_address.address
+          : address,
+      });
+
+      const fee = {
+        amount: [
+          {
+            denom: coin?.minimal_denom,
+            amount: String(stakingAmount * Math.pow(10, 6)),
+          },
+        ],
+        gas: "86364",
+      };
+      let memo = [];
+      selectedValidator.map((item) => {
+        memo = memo.concat(
+          addValidator(item.address, item.stakingAllocation / 100)
+        );
+      });
+      memo = Buffer.from([0x02, memo.length, ...Buffer.from(memo)]).toString(
+        "base64"
+      );
+      try {
+        const response = await stargateClient.signAndBroadcast(
+          address,
+          [msg],
+          fee,
+          memo
+        );
+        console.log("response", response);
+        return response;
+        // setResp(JSON.stringify(response, null, 2));
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+  };
+
   const [selectedValidator, setSelectedValidors] = useState(
     selectedValidatorList
   );
@@ -20,6 +93,10 @@ function Allocate({ setStep, stakingAmount }) {
 
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   function calculateSum() {
     const sum = selectedValidator.reduce((total, item) => {
@@ -99,9 +176,49 @@ function Allocate({ setStep, stakingAmount }) {
     }
   }
 
-  function confirmStaking() {
-    setShowSummaryModal(false);
-    setShowStatusModal(true);
+  async function confirmStaking() {
+    const val = sendTokens(getSigningStargateClient, address);
+    console.log("val", val);
+    try {
+      setIsLoading(true);
+      setShowSummaryModal(false);
+      setShowStatusModal(true);
+      const broadCastResult = await val();
+      console.log("val 2", broadCastResult);
+      if (broadCastResult.code === 0) {
+        setIsLoading(false);
+        setIsSuccess(true);
+      } else {
+        console.log(broadCastResult);
+        setIsLoading(false);
+        setIsSuccess(false);
+        setError("The transaction failed! Please try again.");
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setIsSuccess(false);
+      setShowSummaryModal(false);
+      setShowStatusModal(true);
+      console.log(err);
+      setError("The transaction failed! Please try again.");
+    }
+  }
+
+  function addValidator(valAddr, weight) {
+    let addr = bech32?.decode(valAddr);
+    let converted = bech32?.fromWords(addr.words);
+    converted?.unshift(valToByte(weight));
+    return converted;
+  }
+
+  function valToByte(val) {
+    if (val > 1) {
+      val = 1;
+    }
+    if (val < 0) {
+      val = 0;
+    }
+    return Math.abs(val * 200);
   }
 
   useEffect(() => {
@@ -484,7 +601,7 @@ function Allocate({ setStep, stakingAmount }) {
                     <div class="network">
                       <div class="network__inner text-lightgray">
                         <h5 class="font-demi">
-                          <span>{stakingAmount}</span>&nbsp; ATOM
+                          <span>{stakingAmount}</span>&nbsp; {coin.denom}
                           <a
                             href="#"
                             data-bs-toggle="modal"
@@ -634,10 +751,18 @@ function Allocate({ setStep, stakingAmount }) {
           setShowSummaryModal={setShowSummaryModal}
           selectedValidator={selectedValidator}
           confirmStaking={confirmStaking}
+          coin={coin}
+          stakingAmount={stakingAmount}
         />
       )}
       {showStatusModal && (
-        <TransactionStatusModal setShowStatusModal={setShowStatusModal} />
+        <TransactionStatusModal
+          setShowStatusModal={setShowStatusModal}
+          stakingAmount={stakingAmount}
+          isLoading={isLoading}
+          error={error}
+          isSuccess={isSuccess}
+        />
       )}
     </div>
   );
