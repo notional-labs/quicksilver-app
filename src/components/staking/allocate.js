@@ -98,6 +98,8 @@ function Allocate({ setStep, stakingAmount, coin }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const [transactionHash, setTransactionHash] = useState("");
+
   function calculateSum() {
     const sum = selectedValidator.reduce((total, item) => {
       return total + Number(item.stakingAllocation);
@@ -188,6 +190,7 @@ function Allocate({ setStep, stakingAmount, coin }) {
       if (broadCastResult.code === 0) {
         setIsLoading(false);
         setIsSuccess(true);
+        setTransactionHash(broadCastResult.transactionHash);
       } else {
         console.log(broadCastResult);
         setIsLoading(false);
@@ -762,6 +765,7 @@ function Allocate({ setStep, stakingAmount, coin }) {
           isLoading={isLoading}
           error={error}
           isSuccess={isSuccess}
+          transactionHash={transactionHash}
         />
       )}
     </div>

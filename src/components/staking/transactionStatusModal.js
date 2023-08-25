@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { favicon } from "@/assets/img";
+import { favicon, warning } from "@/assets/img";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { selectedNetworkSelector } from "@/slices/selectedNetworks";
@@ -11,8 +11,10 @@ function TransactionStatusModal({
   isLoading,
   error,
   isSuccess,
+  transactionHash,
 }) {
   let selectedNetwork = useSelector(selectedNetworkSelector);
+  const selectedNetworkApy = selectedNetwork?.selectedNetwork?.apy || 0;
   selectedNetwork = selectedNetwork?.selectedNetwork?.value || {};
 
   return (
@@ -108,7 +110,7 @@ function TransactionStatusModal({
                       Quicksilver APY:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      12.24%
+                      {selectedNetworkApy}%
                     </p>
                   </li>
                   <li>
@@ -174,7 +176,7 @@ function TransactionStatusModal({
                 <div class="transection-details__confirmation--icon">
                   {isLoading ? (
                     <div class="loading show"></div>
-                  ) : (
+                  ) : isSuccess ? (
                     <div class="success text-green show">
                       <svg
                         width="50"
@@ -190,6 +192,15 @@ function TransactionStatusModal({
                           fill="currentColor"
                         />
                       </svg>
+                    </div>
+                  ) : (
+                    <div class="failed text-green show">
+                      <Image
+                        src={warning}
+                        alt="warning"
+                        height={50}
+                        width={50}
+                      />
                     </div>
                   )}
                 </div>
@@ -217,11 +228,24 @@ function TransactionStatusModal({
                       ? "The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh."
                       : error}
                   </p>
-                  {!isLoading && (
+                  {!isLoading && isSuccess && (
                     <span class="transaction-hash copy-v-sm text-almostwhite text-gray mt-3">
                       Transaction Hash: &nbsp;
-                      <a href="#" class="text-blue">
-                        <span>7C543C4...2F31</span>
+                      <a
+                        href={
+                          process.env.NEXT_PUBLIC_REACT_APP_MINTSCAN +
+                          transactionHash
+                        }
+                        class="text-blue"
+                        target="_blank"
+                      >
+                        <span>
+                          {transactionHash.substring(0, 7)}....
+                          {transactionHash.substring(
+                            transactionHash.length - 3
+                          )}
+                        </span>
+                        {/* <span>7C543C4...2F31</span> */}
                         <svg
                           width="15"
                           height="14"

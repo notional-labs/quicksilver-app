@@ -33,6 +33,7 @@ import stir from "./networks/stir.png";
 import terravegas from "./networks/terravegas.png";
 import logo from "./logo.png";
 import favicon from "./favicon.png";
+import warning from "./warning.png";
 
 export {
   atom,
@@ -70,4 +71,5 @@ export {
   terravegas,
   logo,
   favicon,
+  warning,
 };

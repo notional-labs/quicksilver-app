@@ -2,14 +2,23 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { favicon } from "@image/index";
+import { networksSelector } from "@/slices/networks";
+import { useSelector } from "react-redux";
 
 function SwitchNetwork({ chainName, chainInfos, onChange }) {
-  //   console.log("Here", chainInfos);
+  const networks = useSelector(networksSelector);
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
 
   const closeModal = () => {
     setShowSwitchNetwork(false);
   };
+
+  function showApyData(item) {
+    const val = networks.networks.find(
+      (network) => network.value.chain_id == item.id
+    );
+    return val?.apy || 0;
+  }
   return (
     <div>
       <div
@@ -126,7 +135,7 @@ function SwitchNetwork({ chainName, chainInfos, onChange }) {
                                     </div>
                                     <div class="content-wrapper__detail">
                                       <h6 class="copy-lg font-medium text-lightgray">
-                                        25%
+                                        {showApyData(item)}%{/* 25% */}
                                       </h6>
                                       <p class="copy-v-sm fw-light text-almostwhite">
                                         APY

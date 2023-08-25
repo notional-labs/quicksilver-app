@@ -12,6 +12,7 @@ function StakingSummary({
   stakingAmount,
 }) {
   let selectedNetwork = useSelector(selectedNetworkSelector);
+  const selectedNetworkApy = selectedNetwork?.selectedNetwork?.apy || 0;
   selectedNetwork =
     selectedNetwork?.selectedNetwork?.value || selectedNetwork.selectedNetwork;
   return (
@@ -80,7 +81,7 @@ function StakingSummary({
                       Quicksilver APY:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      12.24%
+                      {selectedNetworkApy}%
                     </p>
                   </li>
                   <li>
@@ -163,7 +164,7 @@ function StakingSummary({
                   <ul class="list-reset">
                     {selectedValidator.map((item) => {
                       return (
-                        <li>
+                        <li key={item.name}>
                           {/* Network */}
                           <div class="network">
                             <div class="image-wrapper">

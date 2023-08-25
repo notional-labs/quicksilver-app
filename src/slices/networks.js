@@ -48,31 +48,30 @@ export function fetchNetworks() {
       const combinedData = data.zones.map((item, index) => {
         return { ...item, ...stats[index] };
       });
-      console.log("here is the data", combinedData);
+      //   console.log("here is the data", combinedData);
+      //   let zones = manipulateData(combinedData);
+      //   console.log("Zones related data", zones);
+      const APR = await fetch("https://data.quicksilver.zone/apr");
+      const APRDATa = await APR.json();
       let zones = manipulateData(combinedData);
-      console.log("Zones related data", zones);
+      let zonesAPY = zones.map((obj) => ({
+        ...obj,
+        apy:
+          APRDATa.chains.find(
+            (chain) => chain.chain_id === obj.value.chain_id
+          ) !== undefined
+            ? APRDATa.chains.find(
+                (chain) => chain.chain_id === obj.value.chain_id
+              ).apr
+            : "0",
+      }));
       const chain = localStorage.getItem("selected-chain") || "elgafar-1";
-      const selectedNetwork = zones.find(
+      const selectedNetwork = zonesAPY.find(
         (item) => item.value.chain_id == chain
       );
       dispatch(setSelectedNetworkFunc(selectedNetwork));
-      //   const APR = await fetch("https://data.quicksilver.zone/apr");
-      //   const APRDATa = await APR.json();
-      //   let APY = APRDATa.chains;
-      //   let zones = manipulateData(data.zones);
-      //   let zonesAPY = zones.map((obj) => ({
-      //     ...obj,
-      //     apy:
-      //       APRDATa.chains.find(
-      //         (chain) => chain.chain_id === obj.value.chain_id
-      //       ) !== undefined
-      //         ? APRDATa.chains.find(
-      //             (chain) => chain.chain_id === obj.value.chain_id
-      //           ).apr
-      //         : "0",
-      //   }));
+      dispatch(getNetworksSuccess(zonesAPY));
       //   dispatch(getNetworksSuccess(data));
-      dispatch(getNetworksSuccess(zones));
     } catch (error) {
       dispatch(getNetworksFailure());
     }
