@@ -15,13 +15,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <CreateCosmosApp>
-          <Providers>
+        <Providers>
+          <CreateCosmosApp>
             <Header />
             <div className="main-layout">{children}</div>
             <Footer />
-          </Providers>
-        </CreateCosmosApp>
+          </CreateCosmosApp>
+        </Providers>
       </body>
     </html>
   );

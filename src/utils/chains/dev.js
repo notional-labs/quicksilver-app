@@ -1,3 +1,93 @@
+export const DevQuickSilverChainInfo = {
+  chainId: "magic-1",
+  chainName: "Quicksilver Dev",
+  rpc: "https://rpc.dev.quicksilver.zone",
+  rest: "https://lcd.dev.quicksilver.zone",
+  apis: {
+    rpc: [
+      {
+        address: "https://rpc.dev.quicksilver.zone",
+        provider: "quicksilver",
+      },
+    ],
+    rest: [
+      {
+        address: "https://lcd.dev.quicksilver.zone",
+        provider: "quicksilver",
+      },
+    ],
+    grpc: [],
+  },
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: {
+    bech32PrefixAccAddr: "quick",
+    bech32PrefixAccPub: "quickpub",
+    bech32PrefixValAddr: "quickvaloper",
+    bech32PrefixValPub: "quickvaloperpub",
+    bech32PrefixConsAddr: "quickvalcons",
+    bech32PrefixConsPub: "quickvalconspub",
+  },
+  currencies: [
+    {
+      coinDenom: "QCK",
+      coinMinimalDenom: "uqck",
+      coinDecimals: 6,
+      coinGeckoId: "quicksilver",
+    },
+    {
+      coinDenom: "qATOM",
+      coinMinimalDenom: "uqatom",
+      coinDecimals: 6,
+      coinGeckoId: "cosmos",
+    },
+    {
+      coinDenom: "qSTARS",
+      coinMinimalDenom: "uqstars",
+      coinDecimals: 6,
+      coinGeckoId: "stargaze",
+    },
+    {
+      coinDenom: "qOSMO",
+      coinMinimalDenom: "uqosmo",
+      coinDecimals: 6,
+      coinGeckoId: "osmosis",
+    },
+    {
+      coinDenom: "qREGEN",
+      coinMinimalDenom: "uqregen",
+      coinDecimals: 6,
+      coinGeckoId: "regen",
+    },
+    {
+      coinDenom: "qJUNOX",
+      coinMinimalDenom: "uqjunox",
+      coinDecimals: 6,
+      coinGeckoId: "juno",
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "QCK",
+      coinMinimalDenom: "uqck",
+      coinDecimals: 6,
+      coinGeckoId: "quicksilver",
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: "QCK",
+    coinMinimalDenom: "uqck",
+    coinDecimals: 6,
+    coinGeckoId: "quicksilver",
+  },
+  coinType: 118,
+  gasPriceStep: {
+    low: 0.0,
+    average: 0.015,
+    high: 0.03,
+  },
+};
 export const devChains = [
   // {
   //   $schema: "../chain.schema.json",
@@ -184,6 +274,170 @@ export const devChains = [
   //     },
   //   ],
   // },
+  {
+    $schema: "../chain.schema.json",
+    chain_name: "magic-1",
+    status: "not live",
+    network_type: "testnet",
+    pretty_name: "Quicksilver Dev",
+    chain_id: "magic-1",
+    bech32_prefix: "quick",
+    daemon_name: "magic-1",
+    slip44: 118,
+    apis: {
+      rpc: [
+        {
+          address: "https://rpc.test.quicksilver.zone",
+          provider: "quicksilver",
+        },
+      ],
+      rest: [
+        {
+          address: "https://lcd.test.quicksilver.zone",
+          provider: "quicksilver",
+        },
+      ],
+      grpc: [],
+    },
+    bip44: {
+      coinType: 118,
+    },
+    staking: {
+      staking_tokens: [
+        {
+          coinDenom: "QCK",
+          coinMinimalDenom: "uqck",
+          coinDecimals: 6,
+          coinGeckoId: "quicksilver",
+        },
+        {
+          coinDenom: "qATOM",
+          coinMinimalDenom: "uqatom",
+          coinDecimals: 6,
+          coinGeckoId: "cosmos",
+        },
+        {
+          coinDenom: "qSTARS",
+          coinMinimalDenom: "uqstars",
+          coinDecimals: 6,
+          coinGeckoId: "stargaze",
+        },
+        {
+          coinDenom: "qOSMO",
+          coinMinimalDenom: "uqosmo",
+          coinDecimals: 6,
+          coinGeckoId: "osmosis",
+        },
+        {
+          coinDenom: "qREGEN",
+          coinMinimalDenom: "uqregen",
+          coinDecimals: 6,
+          coinGeckoId: "regen",
+        },
+        {
+          coinDenom: "qJUNOX",
+          coinMinimalDenom: "uqjunox",
+          coinDecimals: 6,
+          coinGeckoId: "juno",
+        },
+      ],
+    },
+    fees: {
+      fee_tokens: [
+        {
+          coinDenom: "QCK",
+          coinMinimalDenom: "uqck",
+          coinDecimals: 6,
+          coinGeckoId: "quicksilver",
+        },
+      ],
+    },
+    codebase: {
+      git_repo: "https://secp256k1.net/8ball.git",
+      recommended_version: "v1",
+      compatible_versions: ["v1"],
+      cosmos_sdk_version: "0.46.7",
+      cosmwasm_enabled: true,
+      binaries: {
+        "linux/amd64": "https://8ball.info/8ball.tar.gz",
+      },
+      genesis: {
+        genesis_url: "https://8ball.info/8ball-genesis.json",
+      },
+      versions: [
+        {
+          name: "v1",
+          recommended_version: "v1",
+          compatible_versions: ["v1"],
+          cosmos_sdk_version: "0.46.7",
+          cosmwasm_enabled: true,
+          binaries: {
+            "linux/amd64": "https://8ball.info/8ball.tar.gz",
+          },
+        },
+      ],
+    },
+    logo_URIs: {
+      png: "https://raw.githubusercontent.com/cosmos/chain-registry/master/8ball/images/8ball.png",
+      svg: "https://raw.githubusercontent.com/cosmos/chain-registry/master/8ball/images/8ball.svg",
+    },
+    peers: {
+      seeds: [],
+      persistent_peers: [
+        {
+          id: "fca96d0a1d7357afb226a49c4c7d9126118c37e9",
+          address: "one.8ball.info:26656",
+          provider: "8ball",
+        },
+        {
+          id: "aa918e17c8066cd3b031f490f0019c1a95afe7e3",
+          address: "two.8ball.info:26656",
+          provider: "8ball",
+        },
+        {
+          id: "ce168b8022e525650011352175fa020ce75edcfa",
+          address: "45.141.122.178:34656",
+          provider: "genznodes",
+        },
+        {
+          id: "49778546e7511a1cd6dde65805cd70547c75ce2b",
+          address: "rpc.8ball.nodexcapital.com:11056",
+          provider: "NodeX Validator",
+        },
+      ],
+    },
+    explorers: [
+      {
+        url: "https://explorer.8ball.info/",
+        tx_page: "https://explorer.8ball.info/8ball/tx/${txHash}",
+      },
+      {
+        kind: "ping.pub",
+        url: "https://ping.pub/8ball",
+        tx_page: "https://ping.pub/8ball/tx/${txHash}",
+      },
+      {
+        kind: "NodeStake Explorer",
+        url: "https://explorer.nodestake.top/8ball/",
+        tx_page: "https://explorer.nodestake.top/8ball/tx/${txHash}",
+      },
+      {
+        kind: "TC Network",
+        url: "https://explorer.tcnetwork.io/8ball",
+        tx_page: "https://explorer.tcnetwork.io/8ball/transaction/${txHash}",
+      },
+      {
+        kind: "TC Network",
+        url: "https://explorer.co.id/8ball",
+        tx_page: "https://explorer.co.id/8ball/tx/${txHash}",
+      },
+      {
+        kind: "NODEXPLORER",
+        url: "https://explorer.nodexcapital.com/8ball",
+        tx_page: "https://explorer.nodexcapital.com/8ball/tx/${txHash}",
+      },
+    ],
+  },
   {
     $schema: "../chain.schema.json",
     chain_name: "osmo-test-5",

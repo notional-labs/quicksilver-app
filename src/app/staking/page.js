@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { _loadValsAsync, validatorListSelector } from "@/slices/validatorList";
 import { cosmos } from "juno-network";
 import { selectedNetworkSelector } from "@/slices/selectedNetworks";
+import { quicksilverSelector } from "@/slices/quicksilver";
+import Unstaking from "@/components/unstaking/unstaking";
 
 function Staking() {
   const dispatch = useDispatch();
@@ -17,7 +19,15 @@ function Staking() {
   selectedNetwork =
     selectedNetwork?.selectedNetwork?.value || selectedNetwork.selectedNetwork;
 
+  const quicksilverData = useSelector(quicksilverSelector);
+  const quickSilverBalance =
+    quicksilverData.balances.find(
+      (item) => item.denom == selectedNetwork.local_denom
+    ) || 0;
+  console.log("QUick silver data", quicksilverData);
+
   const [step, setStep] = useState(1);
+  const [isStaking, setIsStaking] = useState(true);
   const [stakingAmount, setStakingAmount] = useState();
   const [qatomAmount, setQatomAmount] = useState();
 
@@ -262,7 +272,7 @@ function Staking() {
                 <ul class="nav nav-tabs">
                   <li class="nav-item">
                     <button
-                      class="nav-link active"
+                      class={`nav-link ${isStaking ? "active" : ""}`}
                       id="staking_1-tab"
                       data-bs-toggle="pill"
                       data-bs-target="#staking_1"
@@ -270,13 +280,16 @@ function Staking() {
                       role="tab"
                       aria-controls="staking_1"
                       aria-selected="true"
+                      onClick={() => {
+                        setIsStaking(true);
+                      }}
                     >
                       Stake
                     </button>
                   </li>
                   <li class="nav-item">
                     <button
-                      class="nav-link"
+                      class={`nav-link ${!isStaking ? "active" : ""}`}
                       id="staking_2-tab"
                       data-bs-toggle="pill"
                       data-bs-target="#staking_2"
@@ -284,6 +297,9 @@ function Staking() {
                       role="tab"
                       aria-controls="staking_2"
                       aria-selected="false"
+                      onClick={() => {
+                        setIsStaking(false);
+                      }}
                     >
                       Unstake
                     </button>
@@ -291,22 +307,51 @@ function Staking() {
                 </ul>
                 {/* Tabs Content [ Stake/Unstake ] [ If you are using Loop, replace (_1) (_2) with index respectively ]  */}
                 <div class="tab-content__staking tab-content">
-                  <div
-                    class="staking_tab tab-pane fade show active"
-                    id="staking_1"
-                    role="tabpanel"
-                    aria-labelledby="staking_1-tab"
-                  >
-                    <div class="staking_tab--amount staking_tab--amount__to-stake">
-                      <p class="copy-lg font-medium mb-1">Amount to Stake</p>
-                      <div class="staking_tab--amount__network">
-                        <div class="network">
-                          <div class="image-wrapper">
-                            <div class="image-ratio image-ratio--square">
-                              <Image src={atom} alt="atom" />
+                  {isStaking ? (
+                    <div
+                      class="staking_tab tab-pane fade show active"
+                      id="staking_1"
+                      role="tabpanel"
+                      aria-labelledby="staking_1-tab"
+                    >
+                      <div class="staking_tab--amount staking_tab--amount__to-stake">
+                        <p class="copy-lg font-medium mb-1">Amount to Stake</p>
+                        <div class="staking_tab--amount__network">
+                          <div class="network">
+                            <div class="image-wrapper">
+                              <div class="image-ratio image-ratio--square">
+                                <Image src={atom} alt="atom" />
+                              </div>
                             </div>
+                            <h6 class="font-medium">
+                              {selectedNetwork &&
+                              selectedNetwork != "Select a network" ? (
+                                <>
+                                  {selectedNetwork.base_denom
+                                    .slice(1)
+                                    .toUpperCase()}
+                                </>
+                              ) : (
+                                <>ATOM</>
+                              )}
+                            </h6>
                           </div>
-                          <h6 class="font-medium">
+                          <div class="network__stats text-end">
+                            <input
+                              type="number"
+                              class="input-lg"
+                              placeholder="0.00"
+                              value={stakingAmount}
+                              onChange={(e) => {
+                                setStakingAmount(e.target.value);
+                              }}
+                            />
+                            <p>$0.00</p>
+                          </div>
+                        </div>
+                        <div class="staking_tab--amount__balance mt-2">
+                          <p class="copy-sm text-uppercase">
+                            BALANCE: {balance.toFixed(2)}{" "}
                             {selectedNetwork &&
                             selectedNetwork != "Select a network" ? (
                               <>
@@ -317,71 +362,79 @@ function Staking() {
                             ) : (
                               <>ATOM</>
                             )}
-                          </h6>
-                        </div>
-                        <div class="network__stats text-end">
-                          <input
-                            type="number"
-                            class="input-lg"
-                            placeholder="0.00"
-                            value={stakingAmount}
-                            onChange={(e) => {
-                              setStakingAmount(e.target.value);
-                            }}
-                          />
-                          <p>$0.00</p>
+                          </p>
+                          <ul class="list-reset staking_tab--amount__balance--options">
+                            <li>
+                              <button
+                                class="tag"
+                                type="button"
+                                onClick={() => {
+                                  setStakingAmount((balance / 2).toFixed(2));
+                                }}
+                              >
+                                Half
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                class="tag"
+                                type="button"
+                                onClick={() => {
+                                  setStakingAmount(balance.toFixed(2));
+                                }}
+                              >
+                                Max
+                              </button>
+                            </li>
+                          </ul>
                         </div>
                       </div>
-                      <div class="staking_tab--amount__balance mt-2">
-                        <p class="copy-sm text-uppercase">
-                          BALANCE: {balance.toFixed(2)}{" "}
-                          {selectedNetwork &&
-                          selectedNetwork != "Select a network" ? (
-                            <>
-                              {selectedNetwork.base_denom
-                                .slice(1)
-                                .toUpperCase()}
-                            </>
-                          ) : (
-                            <>ATOM</>
-                          )}
-                        </p>
-                        <ul class="list-reset staking_tab--amount__balance--options">
-                          <li>
-                            <button
-                              class="tag"
-                              type="button"
-                              onClick={() => {
-                                setStakingAmount((balance / 2).toFixed(2));
-                              }}
-                            >
-                              Half
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              class="tag"
-                              type="button"
-                              onClick={() => {
-                                setStakingAmount(balance.toFixed(2));
-                              }}
-                            >
-                              Max
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="staking_tab--amount staking_tab--amount__to-received">
-                      <p class="copy-lg font-medium mb-1">Amount Received</p>
-                      <div class="staking_tab--amount__network">
-                        <div class="network">
-                          <div class="image-wrapper">
-                            <div class="image-ratio image-ratio--square">
-                              <Image src={qAtom} alt="qAtom" />
+                      <div class="staking_tab--amount staking_tab--amount__to-received">
+                        <p class="copy-lg font-medium mb-1">Amount Received</p>
+                        <div class="staking_tab--amount__network">
+                          <div class="network">
+                            <div class="image-wrapper">
+                              <div class="image-ratio image-ratio--square">
+                                <Image src={qAtom} alt="qAtom" />
+                              </div>
                             </div>
+                            <h6 class="font-medium">
+                              {selectedNetwork &&
+                              selectedNetwork != "Select a network" ? (
+                                <>
+                                  {selectedNetwork.local_denom[1] +
+                                    selectedNetwork.local_denom
+                                      .slice(2)
+                                      .toUpperCase()}
+                                </>
+                              ) : (
+                                <>qATOM</>
+                              )}
+                            </h6>
                           </div>
-                          <h6 class="font-medium">
+                          <div class="network__stats text-end">
+                            <input
+                              type="number"
+                              class="input-lg"
+                              placeholder="0.00"
+                              value={qatomAmount}
+                              disabled
+                            />
+                            {/* <h5 class="font-normal">
+                            {qatomAmount ? qatomAmount : "0.00"}
+                          </h5> */}
+                            <p>$0.00</p>
+                          </div>
+                        </div>
+                        <div class="staking_tab--amount__balance mt-2">
+                          <p class="copy-sm text-uppercase">
+                            BALANCE:{" "}
+                            {quickSilverBalance && quickSilverBalance.amount
+                              ? (
+                                  Number(quickSilverBalance.amount) *
+                                  Math.pow(10, -6)
+                                ).toFixed(2)
+                              : Number(0).toFixed(2)}{" "}
                             {selectedNetwork &&
                             selectedNetwork != "Select a network" ? (
                               <>
@@ -393,297 +446,153 @@ function Staking() {
                             ) : (
                               <>qATOM</>
                             )}
-                          </h6>
-                        </div>
-                        <div class="network__stats text-end">
-                          <input
-                            type="number"
-                            class="input-lg"
-                            placeholder="0.00"
-                            value={qatomAmount}
-                            disabled
-                          />
-                          {/* <h5 class="font-normal">
-                            {qatomAmount ? qatomAmount : "0.00"}
-                          </h5> */}
-                          <p>$0.00</p>
-                        </div>
-                      </div>
-                      <div class="staking_tab--amount__balance mt-2">
-                        <p class="copy-sm text-uppercase">
-                          BALANCE: 0.00{" "}
-                          {selectedNetwork &&
-                          selectedNetwork != "Select a network" ? (
-                            <>
-                              {selectedNetwork.local_denom[1] +
-                                selectedNetwork.local_denom
-                                  .slice(2)
-                                  .toUpperCase()}
-                            </>
-                          ) : (
-                            <>qATOM</>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="staking_tab--additional-costs">
-                      <ul class="list-reset">
-                        <li>
-                          <span
-                            class="copy-normal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            data-bs-html="true"
-                            title="Transactions take place <br> on the native chain."
-                          >
-                            Transaction Cost
-                          </span>
-                          <p class="copy-normal font-medium text-lightgray ms-auto">
-                            <span>14,103.281212</span>{" "}
-                            {selectedNetwork &&
-                            selectedNetwork != "Select a network" ? (
-                              <>
-                                {selectedNetwork.base_denom
-                                  .slice(1)
-                                  .toUpperCase()}
-                              </>
-                            ) : (
-                              "ATOM"
-                            )}
                           </p>
-                        </li>
-                        <li>
-                          <span
-                            class="copy-normal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            data-bs-html="true"
-                            title="Redemption rate is the value of 1 qATOM <br> if redeemed for ATOM on the Quicksilver <br> protocol. The value of qATOM increases <br> over time as rewards accrue."
-                          >
-                            Redemption rate
-                          </span>
-                          <p class="copy-normal font-medium text-lightgray ms-auto">
-                            {selectedNetwork &&
-                            selectedNetwork != "Select a network" ? (
-                              <span>
-                                1{" "}
-                                {selectedNetwork.base_denom
-                                  .slice(1)
-                                  .toUpperCase()}{" "}
-                                ={" "}
-                                {parseFloat(
-                                  1 / selectedNetwork?.redemption_rate
-                                ).toFixed(4)}{" "}
-                                {selectedNetwork.local_denom[1] +
-                                  selectedNetwork.local_denom
-                                    .slice(2)
-                                    .toUpperCase()}{" "}
-                              </span>
-                            ) : (
-                              <>
-                                <span>1 ATOM = 1.243222</span> qATOM
-                              </>
-                            )}
-                          </p>
-                        </li>
-                        <li>
-                          <span
-                            class="copy-normal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            data-bs-html="true"
-                            title="Length of time to unstake tokens from a <br> validator. Unbonding time is set by the <br> native chain. To exit a position faster, <br> sell qAsset for Asset on Osmosis."
-                          >
-                            Unbonding Period
-                          </span>
-                          {selectedNetwork &&
-                          selectedNetwork != "Select a network" ? (
-                            <p class="copy-normal font-medium text-lightgray ms-auto">
-                              {selectedNetwork.unbonding_period /
-                                (8.64 * Math.pow(10, 13))}{" "}
-                              days
-                            </p>
-                          ) : (
-                            <p class="copy-normal font-medium text-lightgray ms-auto">
-                              7 days
-                            </p>
-                          )}
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="staking_tab--confirmation">
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckChecked"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="flexCheckChecked"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="bottom"
-                          data-bs-html="true"
-                          title="Click here to use <br> your existing stake <br> allocation intent."
-                        >
-                          Proceed with Existing Intent
-                        </label>
-                      </div>
-                    </div>
-                    <div class="staking_tab--btn mt-4">
-                      {isWalletConnected ? (
-                        <button
-                          class={`btn btn-primary w-100 ${
-                            (balance < stakingAmount && "disabled") ||
-                            (!stakingAmount && "disabled")
-                          } `}
-                          data-bs-toggle="modal"
-                          data-bs-target="#modal_connect-wallet"
-                          role="button"
-                          disabled={balance < stakingAmount}
-                          onClick={() => {
-                            setStep(2);
-                          }}
-                        >
-                          Next
-                        </button>
-                      ) : (
-                        <button
-                          class="btn btn-primary w-100"
-                          data-bs-toggle="modal"
-                          data-bs-target="#modal_connect-wallet"
-                          role="button"
-                          onClick={() => {
-                            openView();
-                          }}
-                        >
-                          Connect Wallet
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div
-                    class="staking_tab tab-pane fade"
-                    id="staking_2"
-                    role="tabpanel"
-                    aria-labelledby="staking_2-tab"
-                  >
-                    <div class="staking_tab--amount staking_tab--amount__to-stake">
-                      <p class="copy-lg font-medium mb-1">Amount to Stake</p>
-                      <div class="staking_tab--amount__network">
-                        <div class="network">
-                          <div class="image-wrapper">
-                            <div class="image-ratio image-ratio--square">
-                              <Image src={atom} alt="atom" />
-                            </div>
-                          </div>
-                          <h6 class="font-medium">ATOM</h6>
-                        </div>
-                        <div class="network__stats text-end">
-                          <input
-                            type="number"
-                            class="input-lg"
-                            placeholder="0.00"
-                          />
-                          <p>$0.00</p>
                         </div>
                       </div>
-                      <div class="staking_tab--amount__balance mt-2">
-                        <p class="copy-sm text-uppercase">BALANCE: 0.00 ATOM</p>
-                        <ul class="list-reset staking_tab--amount__balance--options">
+                      <div class="staking_tab--additional-costs">
+                        <ul class="list-reset">
                           <li>
-                            <button class="tag" type="button">
-                              Half
-                            </button>
+                            <span
+                              class="copy-normal"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="bottom"
+                              data-bs-html="true"
+                              title="Transactions take place <br> on the native chain."
+                            >
+                              Transaction Cost
+                            </span>
+                            <p class="copy-normal font-medium text-lightgray ms-auto">
+                              <span>14,103.281212</span>{" "}
+                              {selectedNetwork &&
+                              selectedNetwork != "Select a network" ? (
+                                <>
+                                  {selectedNetwork.base_denom
+                                    .slice(1)
+                                    .toUpperCase()}
+                                </>
+                              ) : (
+                                "ATOM"
+                              )}
+                            </p>
                           </li>
                           <li>
-                            <button class="tag" type="button">
-                              Max
-                            </button>
+                            <span
+                              class="copy-normal"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="bottom"
+                              data-bs-html="true"
+                              title="Redemption rate is the value of 1 qATOM <br> if redeemed for ATOM on the Quicksilver <br> protocol. The value of qATOM increases <br> over time as rewards accrue."
+                            >
+                              Redemption rate
+                            </span>
+                            <p class="copy-normal font-medium text-lightgray ms-auto">
+                              {selectedNetwork &&
+                              selectedNetwork != "Select a network" ? (
+                                <span>
+                                  1{" "}
+                                  {selectedNetwork.base_denom
+                                    .slice(1)
+                                    .toUpperCase()}{" "}
+                                  ={" "}
+                                  {parseFloat(
+                                    1 / selectedNetwork?.redemption_rate
+                                  ).toFixed(4)}{" "}
+                                  {selectedNetwork.local_denom[1] +
+                                    selectedNetwork.local_denom
+                                      .slice(2)
+                                      .toUpperCase()}{" "}
+                                </span>
+                              ) : (
+                                <>
+                                  <span>1 ATOM = 1.243222</span> qATOM
+                                </>
+                              )}
+                            </p>
+                          </li>
+                          <li>
+                            <span
+                              class="copy-normal"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="bottom"
+                              data-bs-html="true"
+                              title="Length of time to unstake tokens from a <br> validator. Unbonding time is set by the <br> native chain. To exit a position faster, <br> sell qAsset for Asset on Osmosis."
+                            >
+                              Unbonding Period
+                            </span>
+                            {selectedNetwork &&
+                            selectedNetwork != "Select a network" ? (
+                              <p class="copy-normal font-medium text-lightgray ms-auto">
+                                {selectedNetwork.unbonding_period /
+                                  (8.64 * Math.pow(10, 13))}{" "}
+                                days
+                              </p>
+                            ) : (
+                              <p class="copy-normal font-medium text-lightgray ms-auto">
+                                7 days
+                              </p>
+                            )}
                           </li>
                         </ul>
                       </div>
-                    </div>
-                    <div class="staking_tab--amount staking_tab--amount__to-received">
-                      <p class="copy-lg font-medium mb-1">Amount Received</p>
-                      <div class="staking_tab--amount__network">
-                        <div class="network">
-                          <div class="image-wrapper">
-                            <div class="image-ratio image-ratio--square">
-                              <Image src={qAtom} alt="qAtom" />
-                            </div>
-                          </div>
-                          <h6 class="font-medium">qATOM</h6>
-                        </div>
-                        <div class="network__stats text-end">
-                          <h5 class="font-normal">0.00</h5>
-                          <p>$0.00</p>
+                      <div class="staking_tab--confirmation">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value=""
+                            id="flexCheckChecked"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="flexCheckChecked"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            data-bs-html="true"
+                            title="Click here to use <br> your existing stake <br> allocation intent."
+                          >
+                            Proceed with Existing Intent
+                          </label>
                         </div>
                       </div>
-                      <div class="staking_tab--amount__balance mt-2">
-                        <p class="copy-sm text-uppercase">
-                          BALANCE: 0.00 qATOM
-                        </p>
+                      <div class="staking_tab--btn mt-4">
+                        {isWalletConnected ? (
+                          <button
+                            class={`btn btn-primary w-100 ${
+                              (balance < stakingAmount && "disabled") ||
+                              (!stakingAmount && "disabled")
+                            } `}
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal_connect-wallet"
+                            role="button"
+                            disabled={balance < stakingAmount}
+                            onClick={() => {
+                              setStep(2);
+                            }}
+                          >
+                            Next
+                          </button>
+                        ) : (
+                          <button
+                            class="btn btn-primary w-100"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal_connect-wallet"
+                            role="button"
+                            onClick={() => {
+                              openView();
+                            }}
+                          >
+                            Connect Wallet
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <div class="staking_tab--additional-costs">
-                      <ul class="list-reset">
-                        <li>
-                          <span
-                            class="copy-normal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            data-bs-html="true"
-                            title="Transactions take place <br> on the native chain."
-                          >
-                            Transaction Cost
-                          </span>
-                          <p class="copy-normal font-medium text-lightgray ms-auto">
-                            <span>14,103.281212</span> ATOM
-                          </p>
-                        </li>
-                        <li>
-                          <span
-                            class="copy-normal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            data-bs-html="true"
-                            title="Redemption rate is the value of 1 qATOM <br> if redeemed for ATOM on the Quicksilver <br> protocol. The value of qATOM increases <br> over time as rewards accrue."
-                          >
-                            Redemption rate
-                          </span>
-                          <p class="copy-normal font-medium text-lightgray ms-auto">
-                            <span>1 ATOM = 1.243222</span> qATOM
-                          </p>
-                        </li>
-                        <li>
-                          <span
-                            class="copy-normal"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            data-bs-html="true"
-                            title="Length of time to unstake tokens from a <br> validator. Unbonding time is set by the <br> native chain. To exit a position faster, <br> sell qAsset for Asset on Osmosis."
-                          >
-                            Unbonding Period
-                          </span>
-                          <p class="copy-normal font-medium text-lightgray ms-auto">
-                            7 days
-                          </p>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="staking_tab--btn mt-4">
-                      <button
-                        class="btn btn-primary w-100"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal_connect-wallet"
-                        role="button"
-                      >
-                        Unstake
-                      </button>
-                    </div>
-                  </div>
+                  ) : (
+                    <Unstaking
+                      selectedNetwork={selectedNetwork}
+                      quickSilverBalance={quickSilverBalance}
+                      balance={balance}
+                    />
+                  )}
                 </div>
               </div>
             </div>
