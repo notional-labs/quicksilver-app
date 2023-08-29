@@ -89,7 +89,7 @@ function SwitchNetwork({ chainName, chainInfos, onChange }) {
                     {chainInfos.map((item, index) => {
                       return (
                         <>
-                          {item.label && (
+                          {item.label && item.status != "Quicksilver" && (
                             <div class="col-md-6">
                               <div
                                 class={`preferred_options--each ${

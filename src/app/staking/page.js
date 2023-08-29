@@ -11,6 +11,7 @@ import { cosmos } from "juno-network";
 import { selectedNetworkSelector } from "@/slices/selectedNetworks";
 import { quicksilverSelector } from "@/slices/quicksilver";
 import Unstaking from "@/components/unstaking/unstaking";
+import { images } from "@/utils/images";
 
 function Staking() {
   const dispatch = useDispatch();
@@ -138,7 +139,19 @@ function Staking() {
                   <div class="network">
                     <div class="image-wrapper">
                       <div class="image-ratio image-ratio--square">
-                        <Image src={atom} alt="atom" />
+                        <Image
+                          src={
+                            selectedNetwork &&
+                            selectedNetwork != "Select a network"
+                              ? images[
+                                  selectedNetwork?.base_denom
+                                    ?.slice(1)
+                                    .toLowerCase()
+                                ]
+                              : atom
+                          }
+                          alt="atom"
+                        />
                       </div>
                     </div>
                     <h5 class="font-demi">
@@ -320,7 +333,19 @@ function Staking() {
                           <div class="network">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <Image src={atom} alt="atom" />
+                                <Image
+                                  src={
+                                    selectedNetwork &&
+                                    selectedNetwork != "Select a network"
+                                      ? images[
+                                          selectedNetwork?.base_denom
+                                            ?.slice(1)
+                                            .toLowerCase()
+                                        ]
+                                      : atom
+                                  }
+                                  alt="atom"
+                                />
                               </div>
                             </div>
                             <h6 class="font-medium">
@@ -395,7 +420,20 @@ function Staking() {
                           <div class="network">
                             <div class="image-wrapper">
                               <div class="image-ratio image-ratio--square">
-                                <Image src={qAtom} alt="qAtom" />
+                                <Image
+                                  src={
+                                    selectedNetwork &&
+                                    selectedNetwork != "Select a network"
+                                      ? images[
+                                          selectedNetwork.local_denom[1] +
+                                            selectedNetwork.local_denom
+                                              .slice(2)
+                                              .toLowerCase()
+                                        ]
+                                      : qAtom
+                                  }
+                                  alt="qAtom"
+                                />
                               </div>
                             </div>
                             <h6 class="font-medium">
@@ -451,7 +489,7 @@ function Staking() {
                       </div>
                       <div class="staking_tab--additional-costs">
                         <ul class="list-reset">
-                          <li>
+                          {/* <li>
                             <span
                               class="copy-normal"
                               data-bs-toggle="tooltip"
@@ -474,7 +512,7 @@ function Staking() {
                                 "ATOM"
                               )}
                             </p>
-                          </li>
+                          </li> */}
                           <li>
                             <span
                               class="copy-normal"

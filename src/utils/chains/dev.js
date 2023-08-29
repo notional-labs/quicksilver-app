@@ -277,7 +277,7 @@ export const devChains = [
   {
     $schema: "../chain.schema.json",
     chain_name: "magic-1",
-    status: "not live",
+    status: "Quicksilver",
     network_type: "testnet",
     pretty_name: "Quicksilver Dev",
     chain_id: "magic-1",

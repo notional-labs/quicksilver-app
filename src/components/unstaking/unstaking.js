@@ -7,6 +7,7 @@ import { QuickSilverChainInfo } from "@/utils/chains";
 import { cosmos } from "juno-network";
 import { useSelector } from "react-redux";
 import { quicksilverSelector } from "@/slices/quicksilver";
+import { images } from "@/utils/images";
 
 function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
   let quicksilverAddress = useSelector(quicksilverSelector);
@@ -126,7 +127,17 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
           <div class="network">
             <div class="image-wrapper">
               <div class="image-ratio image-ratio--square">
-                <Image src={qAtom} alt="qAtom" />
+                <Image
+                  src={
+                    selectedNetwork && selectedNetwork != "Select a network"
+                      ? images[
+                          selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom.slice(2).toLowerCase()
+                        ]
+                      : qAtom
+                  }
+                  alt="qAtom"
+                />
               </div>
             </div>
             <h6 class="font-medium">
@@ -197,7 +208,16 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
           <div class="network">
             <div class="image-wrapper">
               <div class="image-ratio image-ratio--square">
-                <Image src={atom} alt="atom" />
+                <Image
+                  src={
+                    selectedNetwork && selectedNetwork != "Select a network"
+                      ? images[
+                          selectedNetwork?.base_denom?.slice(1).toLowerCase()
+                        ]
+                      : atom
+                  }
+                  alt="atom"
+                />
               </div>
             </div>
             <h6 class="font-medium">
@@ -233,7 +253,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
       </div>
       <div class="staking_tab--additional-costs">
         <ul class="list-reset">
-          <li>
+          {/* <li>
             <span
               class="copy-normal"
               data-bs-toggle="tooltip"
@@ -251,7 +271,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
                 "ATOM"
               )}
             </p>
-          </li>
+          </li> */}
           <li>
             <span
               class="copy-normal"
