@@ -2,14 +2,29 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { atom, qAtom } from "@image/index";
-import { useChain } from "@cosmos-kit/react";
+import { useChain, useChainWallet } from "@cosmos-kit/react";
 import { QuickSilverChainInfo } from "@/utils/chains";
 import { cosmos } from "juno-network";
 import { useSelector } from "react-redux";
 import { quicksilverSelector } from "@/slices/quicksilver";
 import { images } from "@/utils/images";
+import { quicksilver, getSigningQuicksilverClient } from "quicksilverjs";
 
 function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
+  //   const { getOfflineSignerDirect, getOfflineSignerAmino, getOfflineSigner } =
+  //     useChain("magic-1");
+  const { getOfflineSignerDirect, getOfflineSignerAmino, getOfflineSigner } =
+    useChainWallet("magic-1", "keplr-extension");
+
+  const val = getOfflineSignerDirect();
+  console.log(
+    "HERERERERERE",
+    getOfflineSignerDirect,
+    getOfflineSignerAmino,
+    getOfflineSigner,
+    val
+  );
+
   let quicksilverAddress = useSelector(quicksilverSelector);
   quicksilverAddress = quicksilverAddress.quicksilverAddress || "";
   console.log("Here is the data", quicksilverAddress);
@@ -19,6 +34,15 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
     quickSilverBalance && quickSilverBalance.amount
       ? (Number(quickSilverBalance.amount) * Math.pow(10, -6)).toFixed(2)
       : Number(0).toFixed(2);
+
+  const { requestRedemption } =
+    quicksilver.interchainstaking.v1.MessageComposer.withTypeUrl;
+  console.log("requestRedemption", requestRedemption);
+
+  const stargateClient = getSigningQuicksilverClient({
+    rpcEndpoint: "https://rpc.dev.quicksilver.zone:443",
+  });
+  console.log("stargateClient", stargateClient);
 
   let localChain;
   if (typeof window !== "undefined") {
@@ -40,28 +64,54 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
 
   const sendTokens = (getSigningStargateClient, address) => {
     return async () => {
-      const stargateClient = await getSigningStargateClient();
-      if (!stargateClient || !address) {
-        console.error("stargateClient undefined or address undefined.");
-        return;
-      }
+      //   const stargateClient = await getSigningStargateClient();
+      //   if (!stargateClient || !address) {
+      //     console.error("stargateClient undefined or address undefined.");
+      //     return;
+      //   }
 
-      const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
+      //   const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
 
-      const msg = {
-        typeUrl: "/quicksilver.interchainstaking.v1.MsgRequestRedemption",
+      //   const msg = {
+      //     typeUrl: "/quicksilver.interchainstaking.v1.MsgRequestRedemption",
+      //     value: {
+      //       amount: [
+      //         {
+      //           denom: "uqatom",
+      //           amount: String(unStakingAmount * Math.pow(10, 6)),
+      //         },
+      //       ],
+      //       toAddress: address,
+      //       fromAddress: quicksilverAddress,
+      //     },
+      //   };
+
+      const stargateClient = await getSigningQuicksilverClient({
+        rpcEndpoint: "https://rpc.test.quicksilver.zone",
+        signer: getOfflineSignerDirect(),
+      });
+      let msg = requestRedemption({
         value: {
-          amount: [
-            {
-              denom: "uqatom",
-              amount: String(unStakingAmount * Math.pow(10, 6)),
-            },
-          ],
-          toAddress: address,
-          fromAddress: quicksilverAddress,
+          denom: "uqatom",
+          amount: String(unStakingAmount * Math.pow(10, 6)),
         },
-      };
 
+        destinationAddress: address,
+        fromAddress: quicksilverAddress,
+      });
+      //   {
+      //     value: {
+      //       amount: [
+      //         {
+      //           denom: "uqatom",
+      //           amount: String(unStakingAmount * Math.pow(10, 6)),
+      //         },
+      //       ],
+      //       toAddress: address,
+      //       fromAddress: quicksilverAddress,
+      //     },
+      //   };
+      console.log("MSG", msg);
       const fee = {
         amount: [
           {
@@ -73,7 +123,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
       };
       try {
         const response = await stargateClient.signAndBroadcast(
-          address,
+          quicksilverAddress,
           [msg],
           fee
         );
