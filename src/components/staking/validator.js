@@ -648,7 +648,10 @@ function Validator({ setStep, stakingAmount, coin }) {
                   </div>
                 </div>
               ) : (
-                <Favorite showInactive={showInactive} />
+                <Favorite
+                  showInactive={showInactive}
+                  handleValidatorChange={handleValidatorChange}
+                />
               )}
             </div>
           </div>

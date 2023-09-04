@@ -6,7 +6,7 @@ import {
 } from "@/slices/validatorList";
 import { useDispatch, useSelector } from "react-redux";
 
-function Favorite({ showInactive }) {
+function Favorite({ showInactive, handleValidatorChange }) {
   const dispatch = useDispatch();
   const selectedValidatorList = useSelector(
     (state) => state.validatorList.selectedValidatorList
@@ -65,19 +65,6 @@ function Favorite({ showInactive }) {
           : 0
       );
       setFavoriteValidator(tempValidator);
-    }
-  }
-  function handleValidatorChange(item, index) {
-    const validator = selectedValidatorList.find(
-      (element) => element.name == item.name
-    );
-    if (validator) {
-      const tempSelectedValidors = JSON.parse(
-        JSON.stringify(selectedValidatorList)
-      ).filter((element) => element.name != item.name);
-      dispatch(setSelectedValidatorList(tempSelectedValidors));
-    } else {
-      dispatch(setSelectedValidatorList([...selectedValidatorList, item]));
     }
   }
   function handleFavoriteClick(item, index) {

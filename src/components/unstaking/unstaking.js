@@ -4,30 +4,24 @@ import Image from "next/image";
 import { atom, qAtom } from "@image/index";
 import { useChain, useChainWallet } from "@cosmos-kit/react";
 import { QuickSilverChainInfo } from "@/utils/chains";
-import { cosmos } from "juno-network";
 import { useSelector } from "react-redux";
 import { quicksilverSelector } from "@/slices/quicksilver";
 import { images } from "@/utils/images";
 import { quicksilver, getSigningQuicksilverClient } from "quicksilverjs";
+import TransactionStatusModal from "./transactionStatusModal";
 
 function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
-  //   const { getOfflineSignerDirect, getOfflineSignerAmino, getOfflineSigner } =
-  //     useChain("magic-1");
-  const { getOfflineSignerDirect, getOfflineSignerAmino, getOfflineSigner } =
-    useChainWallet("magic-1", "keplr-extension");
-
-  const val = getOfflineSignerDirect();
-  console.log(
-    "HERERERERERE",
-    getOfflineSignerDirect,
-    getOfflineSignerAmino,
-    getOfflineSigner,
-    val
-  );
+  const quickSilverChainId = QuickSilverChainInfo?.chainId || "";
 
   let quicksilverAddress = useSelector(quicksilverSelector);
   quicksilverAddress = quicksilverAddress.quicksilverAddress || "";
-  console.log("Here is the data", quicksilverAddress);
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [transactionHash, setTransactionHash] = useState("");
+
   const [unStakingAmount, setUnStakingAmount] = useState();
   const [atomAmount, setAtomAmount] = useState();
   const qAtomAmount =
@@ -37,20 +31,19 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
 
   const { requestRedemption } =
     quicksilver.interchainstaking.v1.MessageComposer.withTypeUrl;
-  console.log("requestRedemption", requestRedemption);
-
-  const stargateClient = getSigningQuicksilverClient({
-    rpcEndpoint: "https://rpc.dev.quicksilver.zone:443",
-  });
-  console.log("stargateClient", stargateClient);
 
   let localChain;
   if (typeof window !== "undefined") {
     localChain = localStorage.getItem("selected-chain");
   }
-  const { isWalletConnected, address, openView, getSigningStargateClient } =
-    useChain(localChain || "elgafar-1");
-  //   const { getSigningStargateClient } = useChain(QuickSilverChainInfo.chainId);
+  const { isWalletConnected, address, openView, wallet } = useChain(
+    localChain || "elgafar-1"
+  );
+
+  const { getOfflineSignerAmino } = useChainWallet(
+    quickSilverChainId,
+    wallet?.name
+  );
 
   useEffect(() => {
     if (unStakingAmount && selectedNetwork && selectedNetwork.redemption_rate) {
@@ -62,64 +55,31 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
     }
   }, [unStakingAmount]);
 
-  const sendTokens = (getSigningStargateClient, address) => {
+  const sendTokens = (address) => {
     return async () => {
-      //   const stargateClient = await getSigningStargateClient();
-      //   if (!stargateClient || !address) {
-      //     console.error("stargateClient undefined or address undefined.");
-      //     return;
-      //   }
-
-      //   const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
-
-      //   const msg = {
-      //     typeUrl: "/quicksilver.interchainstaking.v1.MsgRequestRedemption",
-      //     value: {
-      //       amount: [
-      //         {
-      //           denom: "uqatom",
-      //           amount: String(unStakingAmount * Math.pow(10, 6)),
-      //         },
-      //       ],
-      //       toAddress: address,
-      //       fromAddress: quicksilverAddress,
-      //     },
-      //   };
-
       const stargateClient = await getSigningQuicksilverClient({
-        rpcEndpoint: "https://rpc.test.quicksilver.zone",
-        signer: getOfflineSignerDirect(),
+        // rpcEndpoint: "https://rpc.dev.quicksilver.zone",
+        rpcEndpoint: QuickSilverChainInfo?.rpc,
+        signer: getOfflineSignerAmino(),
       });
+      console.log("Stargate", stargateClient);
       let msg = requestRedemption({
         value: {
-          denom: "uqatom",
+          denom: selectedNetwork.local_denom,
           amount: String(unStakingAmount * Math.pow(10, 6)),
         },
-
+        chainId: quickSilverChainId,
         destinationAddress: address,
         fromAddress: quicksilverAddress,
       });
-      //   {
-      //     value: {
-      //       amount: [
-      //         {
-      //           denom: "uqatom",
-      //           amount: String(unStakingAmount * Math.pow(10, 6)),
-      //         },
-      //       ],
-      //       toAddress: address,
-      //       fromAddress: quicksilverAddress,
-      //     },
-      //   };
-      console.log("MSG", msg);
       const fee = {
         amount: [
           {
-            denom: "uqatom",
+            denom: selectedNetwork.local_denom,
             amount: String(unStakingAmount * Math.pow(10, 6)),
           },
         ],
-        gas: "86364",
+        gas: "200000",
       };
       try {
         const response = await stargateClient.signAndBroadcast(
@@ -129,39 +89,35 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
         );
         console.log("response", response);
         return response;
-        // setResp(JSON.stringify(response, null, 2));
       } catch (error) {
         console.log("error", error);
       }
     };
   };
   async function unstake() {
-    const val = sendTokens(getSigningStargateClient, address);
-    console.log("val", val);
+    const val = sendTokens(address);
     try {
-      //   setIsLoading(true);
-      //   setShowSummaryModal(false);
-      //   setShowStatusModal(true);
+      setIsLoading(true);
+      setShowStatusModal(true);
       const broadCastResult = await val();
       console.log("val 2", broadCastResult);
       if (broadCastResult.code === 0) {
-        // setIsLoading(false);
-        // setIsSuccess(true);
-        // setTransactionHash(broadCastResult.transactionHash);
+        setIsLoading(false);
+        setIsSuccess(true);
+        setTransactionHash(broadCastResult.transactionHash);
         console.log(broadCastResult);
       } else {
         console.log(broadCastResult);
-        // setIsLoading(false);
-        // setIsSuccess(false);
-        // setError("The transaction failed! Please try again.");
+        setIsLoading(false);
+        setIsSuccess(false);
+        setError("The transaction failed! Please try again.");
       }
     } catch (err) {
-      //   setIsLoading(false);
-      //   setIsSuccess(false);
-      //   setShowSummaryModal(false);
-      //   setShowStatusModal(true);
+      setIsLoading(false);
+      setIsSuccess(false);
+      setShowStatusModal(true);
       console.log(err);
-      //   setError("The transaction failed! Please try again.");
+      setError("The transaction failed! Please try again.");
     }
   }
   return (
@@ -401,6 +357,16 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
           </button>
         )}
       </div>
+      {showStatusModal && (
+        <TransactionStatusModal
+          setShowStatusModal={setShowStatusModal}
+          unStakingAmount={unStakingAmount}
+          isLoading={isLoading}
+          error={error}
+          isSuccess={isSuccess}
+          transactionHash={transactionHash}
+        />
+      )}
     </div>
   );
 }

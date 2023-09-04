@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { favicon, warning } from "@/assets/img";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -7,14 +7,13 @@ import { selectedNetworkSelector } from "@/slices/selectedNetworks";
 
 function TransactionStatusModal({
   setShowStatusModal,
-  stakingAmount,
+  unStakingAmount,
   isLoading,
   error,
   isSuccess,
   transactionHash,
 }) {
   let selectedNetwork = useSelector(selectedNetworkSelector);
-  const selectedNetworkApy = selectedNetwork?.selectedNetwork?.apy || 0;
   selectedNetwork = selectedNetwork?.selectedNetwork?.value || {};
 
   return (
@@ -64,8 +63,8 @@ function TransactionStatusModal({
                 {isLoading
                   ? "Approve Transaction"
                   : isSuccess
-                  ? "Stake Transaction Successful"
-                  : "Stake Transaction Failed"}
+                  ? "Unstake Initiated "
+                  : "Unstake Initiation Failed"}
               </h6>
             </div>
             <div class="modal-description d-none d-md-block">
@@ -94,23 +93,18 @@ function TransactionStatusModal({
                 <ul class="list-reset">
                   <li>
                     <h6 class="copy-sm font-normal text-almostwhite">
-                      Total Stake:
+                      Total Unstake Amount:
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      <span>{stakingAmount}</span>{" "}
+                      <span>{unStakingAmount}</span>{" "}
                       {selectedNetwork ? (
-                        <>{selectedNetwork.base_denom.slice(1).toUpperCase()}</>
+                        <>
+                          {selectedNetwork.local_denom[1] +
+                            selectedNetwork.local_denom.slice(2).toUpperCase()}
+                        </>
                       ) : (
-                        <>ATOM</>
+                        <>qATOM</>
                       )}
-                    </p>
-                  </li>
-                  <li>
-                    <h6 class="copy-sm font-normal text-almostwhite">
-                      Quicksilver APY:
-                    </h6>
-                    <p class="copy-normal font-demi text-almostwhite ms-auto">
-                      {selectedNetworkApy}%
                     </p>
                   </li>
                   <li>
@@ -120,19 +114,18 @@ function TransactionStatusModal({
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
                       {selectedNetwork ? (
                         <span>
-                          1 {selectedNetwork.base_denom.slice(1).toUpperCase()}{" "}
-                          ={" "}
-                          {parseFloat(
-                            1 / selectedNetwork?.redemption_rate
-                          ).toFixed(4)}{" "}
+                          1{" "}
                           {selectedNetwork.local_denom[1] +
-                            selectedNetwork.local_denom
-                              .slice(2)
-                              .toUpperCase()}{" "}
+                            selectedNetwork.local_denom.slice(2).toUpperCase()}
+                          ={" "}
+                          {parseFloat(selectedNetwork?.redemption_rate).toFixed(
+                            4
+                          )}{" "}
+                          {selectedNetwork.base_denom.slice(1).toUpperCase()}{" "}
                         </span>
                       ) : (
                         <>
-                          <span>1 ATOM = 1.243222</span> qATOM
+                          <span>1 qATOM = 1.243222</span> ATOM
                         </>
                       )}
                     </p>
@@ -141,14 +134,11 @@ function TransactionStatusModal({
                     <h6 class="copy-sm font-normal text-almostwhite">
                       {selectedNetwork ? (
                         <>
-                          {selectedNetwork.local_denom[1] +
-                            selectedNetwork.local_denom
-                              .slice(2)
-                              .toUpperCase()}{" "}
-                          Received
+                          {selectedNetwork.base_denom.slice(1).toUpperCase()}{" "}
+                          Received:
                         </>
                       ) : (
-                        <>qATOM Received</>
+                        <>ATOM Received:</>
                       )}
                     </h6>
                     <p class="copy-normal font-demi text-almostwhite ms-auto">
@@ -156,16 +146,15 @@ function TransactionStatusModal({
                         <>
                           <span>
                             {(
-                              (1 / Number(selectedNetwork?.redemption_rate)) *
-                              stakingAmount
+                              Number(selectedNetwork?.redemption_rate) *
+                              unStakingAmount
                             ).toFixed(6)}
                           </span>{" "}
-                          {selectedNetwork.local_denom[1] +
-                            selectedNetwork.local_denom.slice(2).toUpperCase()}
+                          {selectedNetwork.base_denom.slice(1).toUpperCase()}
                         </>
                       ) : (
                         <>
-                          <span>11.123123</span> qATOM
+                          <span>11.123123</span> ATOM
                         </>
                       )}
                     </p>
@@ -213,8 +202,8 @@ function TransactionStatusModal({
                     {isLoading
                       ? "Approving Transaction"
                       : isSuccess
-                      ? "Transaction Successful"
-                      : "Transaction Failed"}
+                      ? "Unstake Initiated"
+                      : "Unstake Initiation Failed"}
                   </h6>
                   {/* data-description include the after approval description text */}
                   <p
@@ -225,7 +214,7 @@ function TransactionStatusModal({
                     {isLoading
                       ? "Please wait until your transaction is confirmed on the blockchain."
                       : isSuccess
-                      ? "The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh."
+                      ? "Unstake transaction successful. Your tokens will be unstaked per the native chain's unstaking time. You will be redirected to the Staking page."
                       : error}
                   </p>
                   {!isLoading && isSuccess && (
