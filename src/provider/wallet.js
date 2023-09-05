@@ -12,7 +12,9 @@ import { setSelectedNetworkFunc } from "@/slices/selectedNetworks";
 export const WalletSection = () => {
   const networks = useSelector(networksSelector);
   const dispatch = useDispatch();
-  const [chainName, setChainName] = useState("elgafar-1");
+  const [chainName, setChainName] = useState(
+    process.env.NEXT_PUBLIC_REACT_APP_DEFAULT_CHAIN
+  );
   const { chainRecords, getChainLogo } = useManager();
   const chainOptions = useMemo(
     () =>
@@ -30,7 +32,10 @@ export const WalletSection = () => {
   );
 
   useEffect(() => {
-    setChainName(localStorage.getItem("selected-chain") || "elgafar-1");
+    setChainName(
+      localStorage.getItem("selected-chain") ||
+        process.env.NEXT_PUBLIC_REACT_APP_DEFAULT_CHAIN
+    );
   }, [chainName]);
 
   const onChainChange = async (selectedValue, closeModal) => {

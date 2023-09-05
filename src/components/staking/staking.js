@@ -10,7 +10,7 @@ function MainStaking({
   balance,
   stakingAmount,
   setStakingAmount,
-  qatomAmount,
+  qAsset,
   isWalletConnected,
   openView,
   setStep,
@@ -131,11 +131,11 @@ function MainStaking({
               type="number"
               class="input-lg"
               placeholder="0.00"
-              value={qatomAmount}
+              value={qAsset}
               disabled
             />
             {/* <h5 class="font-normal">
-                            {qatomAmount ? qatomAmount : "0.00"}
+                            {qAsset ? qAsset : "0.00"}
                           </h5> */}
             <p>$0.00</p>
           </div>
@@ -258,7 +258,8 @@ function MainStaking({
           <button
             class={`btn btn-primary w-100 ${
               (balance < stakingAmount && "disabled") ||
-              (!stakingAmount && "disabled")
+              (!stakingAmount && "disabled") ||
+              (stakingAmount <= 0 && "disabled")
             } `}
             data-bs-toggle="modal"
             data-bs-target="#modal_connect-wallet"

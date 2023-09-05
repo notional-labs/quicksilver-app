@@ -28,14 +28,14 @@ function Staking() {
   const [step, setStep] = useState(1);
   const [isStaking, setIsStaking] = useState(true);
   const [stakingAmount, setStakingAmount] = useState();
-  const [qatomAmount, setQatomAmount] = useState();
+  const [qAsset, setQAsset] = useState();
 
   let localChain;
   if (typeof window !== "undefined") {
     localChain = localStorage.getItem("selected-chain");
   }
   const { isWalletConnected, chain, address, openView, getRpcEndpoint } =
-    useChain(localChain || "elgafar-1");
+    useChain(localChain || process.env.NEXT_PUBLIC_REACT_APP_DEFAULT_CHAIN);
 
   let walletData;
   if (typeof window !== "undefined") {
@@ -44,7 +44,8 @@ function Staking() {
 
   //////////////////////////////////////////
 
-  const chainName = localChain || "elgafar-1";
+  const chainName =
+    localChain || process.env.NEXT_PUBLIC_REACT_APP_DEFAULT_CHAIN;
   const coin = chain.staking.staking_tokens[0] || {};
 
   const [balance, setBalance] = useState(0);
@@ -99,11 +100,11 @@ function Staking() {
 
   useEffect(() => {
     if (stakingAmount && selectedNetwork && selectedNetwork.redemption_rate) {
-      setQatomAmount(
+      setQAsset(
         ((1 / selectedNetwork?.redemption_rate) * stakingAmount).toFixed(2)
       );
     } else {
-      setQatomAmount("");
+      setQAsset("");
     }
   }, [stakingAmount]);
   return (
@@ -152,7 +153,7 @@ function Staking() {
                       aria-controls="staking_2"
                       aria-selected="false"
                       onClick={() => {
-                        setIsStaking(false);
+                        if (isWalletConnected) setIsStaking(false);
                       }}
                     >
                       Unstake
@@ -168,7 +169,7 @@ function Staking() {
                       balance={balance}
                       stakingAmount={stakingAmount}
                       setStakingAmount={setStakingAmount}
-                      qatomAmount={qatomAmount}
+                      qAsset={qAsset}
                       isWalletConnected={isWalletConnected}
                       openView={openView}
                       setStep={setStep}

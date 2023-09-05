@@ -65,7 +65,9 @@ export function fetchNetworks() {
               ).apr
             : "0",
       }));
-      const chain = localStorage.getItem("selected-chain") || "elgafar-1";
+      const chain =
+        localStorage.getItem("selected-chain") ||
+        process.env.NEXT_PUBLIC_REACT_APP_DEFAULT_CHAIN;
       const selectedNetwork = zonesAPY.find(
         (item) => item.value.chain_id == chain
       );

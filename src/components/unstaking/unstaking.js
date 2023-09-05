@@ -23,8 +23,8 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
   const [transactionHash, setTransactionHash] = useState("");
 
   const [unStakingAmount, setUnStakingAmount] = useState();
-  const [atomAmount, setAtomAmount] = useState();
-  const qAtomAmount =
+  const [assetAmount, setAssetAmount] = useState();
+  const qAsset =
     quickSilverBalance && quickSilverBalance.amount
       ? (Number(quickSilverBalance.amount) * Math.pow(10, -6)).toFixed(2)
       : Number(0).toFixed(2);
@@ -37,7 +37,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
     localChain = localStorage.getItem("selected-chain");
   }
   const { isWalletConnected, address, openView, wallet } = useChain(
-    localChain || "elgafar-1"
+    localChain || process.env.NEXT_PUBLIC_REACT_APP_DEFAULT_CHAIN
   );
 
   const { getOfflineSignerAmino } = useChainWallet(
@@ -47,11 +47,11 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
 
   useEffect(() => {
     if (unStakingAmount && selectedNetwork && selectedNetwork.redemption_rate) {
-      setAtomAmount(
+      setAssetAmount(
         (selectedNetwork?.redemption_rate * unStakingAmount).toFixed(2)
       );
     } else {
-      setAtomAmount("");
+      setAssetAmount("");
     }
   }, [unStakingAmount]);
 
@@ -172,7 +172,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
         </div>
         <div class="staking_tab--amount__balance mt-2">
           <p class="copy-sm text-uppercase">
-            BALANCE: {qAtomAmount}{" "}
+            BALANCE: {qAsset}{" "}
             {selectedNetwork && selectedNetwork != "Select a network" ? (
               <>
                 {selectedNetwork.local_denom[1] +
@@ -188,7 +188,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
                 class="tag"
                 type="button"
                 onClick={() => {
-                  setUnStakingAmount(Number(qAtomAmount / 2).toFixed(2));
+                  setUnStakingAmount(Number(qAsset / 2).toFixed(2));
                 }}
               >
                 Half
@@ -199,7 +199,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
                 class="tag"
                 type="button"
                 onClick={() => {
-                  setUnStakingAmount(Number(qAtomAmount).toFixed(2));
+                  setUnStakingAmount(Number(qAsset).toFixed(2));
                 }}
               >
                 Max
@@ -239,7 +239,7 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
               type="number"
               class="input-lg"
               placeholder="0.00"
-              value={atomAmount}
+              value={assetAmount}
               disabled
             />
             {/* <h5 class="font-normal">0.00</h5> */}
@@ -332,7 +332,8 @@ function Unstaking({ selectedNetwork, quickSilverBalance, balance }) {
           <button
             class={`btn btn-primary w-100 ${
               (!unStakingAmount && "disabled") ||
-              (qAtomAmount < unStakingAmount && "disabled")
+              (qAsset < unStakingAmount && "disabled") ||
+              (unStakingAmount <= 0 && "disabled")
             }`}
             data-bs-toggle="modal"
             data-bs-target="#modal_connect-wallet"
