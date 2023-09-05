@@ -6,10 +6,13 @@ import { WalletSection } from "@/provider/wallet";
 import SwitchNetwork from "./switchNetwork";
 import { useDispatch } from "react-redux";
 import { fetchNetworks } from "@/slices/networks";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function Header() {
   const dispatch = useDispatch();
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     dispatch(fetchNetworks());
@@ -38,29 +41,56 @@ function Header() {
             <div class="navbar-nav-wrapper">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" href="#">
+                  <Link
+                    href="/staking"
+                    className={`nav-link ${
+                      pathname === "/staking" ? "active" : ""
+                    }`}
+                  >
                     Staking
-                  </a>
+                  </Link>
                 </li>
+
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <Link
+                    href="/assets"
+                    className={`nav-link ${
+                      pathname === "/assets" ? "active" : ""
+                    }`}
+                  >
                     Assets
-                  </a>
+                  </Link>
                 </li>
+
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <Link
+                    href="/deFi"
+                    className={`nav-link ${
+                      pathname === "/deFi" ? "active" : ""
+                    }`}
+                  >
                     DeFi
-                  </a>
+                  </Link>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    Airdrop
-                  </a>
+                  <Link
+                    href="/airdrop"
+                    className={`nav-link ${
+                      pathname === "/airdrop" ? "active" : ""
+                    }`}
+                  >
+                    AirDrop
+                  </Link>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <Link
+                    href="/governance"
+                    className={`nav-link ${
+                      pathname === "/governance" ? "active" : ""
+                    }`}
+                  >
                     Governance
-                  </a>
+                  </Link>
                 </li>
               </ul>
               <div class="wallet-and-network ms-lg-auto">
